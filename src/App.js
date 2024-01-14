@@ -11,14 +11,19 @@ function sketch(p5) {
   let img;
 
   const n_stops = 14;
-  const obs_stop = 11;
-  const dest_stop = 14;
-  var route_dir = (obs_stop - dest_stop > 0) ? 1 : -1
-  if (obs_stop === dest_stop) {
-    if (dest_stop === 1) route_dir = 1
-    else route_dir = -1
-  }
+  let obs_stop = 11;
+  let dest_stop;
+  var route_dir;
 
+  const changeDest = (dest) => {
+    dest_stop = dest
+    route_dir = (obs_stop - dest_stop > 0) ? 1 : -1
+    if (obs_stop === dest_stop) {
+      if (dest_stop === 1) route_dir = 1
+      else route_dir = -1
+    }
+  }
+  changeDest(1);
 
   const station_margin_l = 50;
   const station_margin_r = 140;
@@ -160,7 +165,8 @@ function sketch(p5) {
       
     }  
     
-    p5.image(pg, 0, 0, p5.windowWidth, p5.windowWidth/4.0);
+    let newH = p5.windowWidth/4.0;
+    p5.image(pg, 0, (p5.windowHeight - newH)/2, p5.windowWidth, newH);
   }
 
   p5.windowResized = () => {
@@ -171,35 +177,11 @@ function sketch(p5) {
     if (p5.mouseX > 0 && p5.mouseX < p5.width && p5.mouseY > 0 && p5.mouseY < p5.height) {
       let fs = p5.fullscreen();
       p5.fullscreen(!fs);
+      p5.resizeCanvas(p5.windowWidth, p5.windowHeight)
     }
   }
 }
+
 export default function App() {
   return <ReactP5Wrapper sketch={sketch}/>;
 }
-
-// import logo from './logo.svg';
-// import './App.css';
-
-// function App() {
-//   return (
-//     <div className="App">
-//       <header className="App-header">
-//         <img src={logo} className="App-logo" alt="logo" />
-//         <p>
-//           Edit <code>src/App.js</code> and save to reload.
-//         </p>
-//         <a
-//           className="App-link"
-//           href="https://reactjs.org"
-//           target="_blank"
-//           rel="noopener noreferrer"
-//         >
-//           Learn React
-//         </a>
-//       </header>
-//     </div>
-//   );
-// }
-
-// export default App;
