@@ -5,9 +5,8 @@ import {
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import sketch from './sign';
-import {get_data} from './data'
-import {Location, Status, Stop} from './helpers'
-import { code_to_stop } from "./constants";
+import {get_live} from './data'
+
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -24,50 +23,16 @@ function App() {
   useEffect(() => {
 
     async function fetchData() {
-      var new_locs = await get_data()
+      var new_locs = await get_live()
       let dest = (state.dest_stop === 1) ? "alg" : "ggn";
-      new_locs = new_locs.filter((it) => it["dest"] === dest)
-      var arrivals = []
-      for (let v of new_locs) {
-        var status;
-        switch (v.status) {
-          case "incoming_at": {
-            status = Status.incoming_at
-            break;
-          }
-          case "stopped_at": {
-            status = Status.stopped_at
-            break;
-          }
-          case "in_transit_to": {
-            status = Status.in_transit_to
-            break;
-          }
-          case "scheduled": {
-            status = Status.scheduled
-            break;
-          }
-          default: {
-            status = Status.unknown
-            break;
-          }
-        }
-        var arr: Location = {
-            dest: code_to_stop[dest],
-            stop: code_to_stop[v.stop],
-            seq: v.seq,
-            status: status
-        }
-        arrivals.push(arr)
-      }
-      return arrivals
+      new_locs = new_locs.filter((it) => it.dest === dest)
+      return new_locs
     }
 
     const interval = setInterval(
       () => {
         fetchData()
           .then(arr => {setArrivals(arr)})
-        
       },
       1000)
 

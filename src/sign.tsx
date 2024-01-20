@@ -6,6 +6,7 @@ import montserrat from "./res/Montserrat/static/Montserrat-SemiBold.ttf"
 import tcLogo from './res/img/tcc_white.png'
 import {stop_short_names, head_sign_names} from "./constants"
 import {Location, Status, Stop} from './helpers'
+import dayjs from "dayjs";
 
 
 type SignSketchProps = SketchProps & {
@@ -22,7 +23,7 @@ function sketch(p5: P5CanvasInstance<SignSketchProps>) {
   let img;
 
   const station_margin_l = 50;
-    const station_margin_r = 140;
+  const station_margin_r = 140;
 
   const n_stops = 14;
   var obs_stop;
@@ -121,7 +122,8 @@ function sketch(p5: P5CanvasInstance<SignSketchProps>) {
     pg.fill(tcc_white);
     pg.textSize(40);
     pg.textAlign(p5.LEFT, p5.CENTER);
-    pg.text(`${p5.hour()}`.padStart(2, '0')+":"+`${p5.minute()}`.padStart(2, '0'), 20, 30);
+    let tm_str = dayjs()
+    pg.text(`${tm_str.format("HH:mm")}`, 20, 30);
     
     pg.textSize(80);
     pg.textAlign(p5.LEFT, p5.BOTTOM);
@@ -139,16 +141,16 @@ function sketch(p5: P5CanvasInstance<SignSketchProps>) {
     pg.image(img, pg.width-(20+sw+100), 17.5, sw, sh)
     
     
-    pg.fill(tcc_light_grey);
-    pg.noStroke();
-    pg.rect(0, pg.height - 35, pg.width, 20)
-    
     let station_spacing = (pg.width - (station_margin_l+station_margin_r))/(n_stops - 1)
     
     var stop_idx = 0
     var arr_idx = []
 
-    if (arrivals.length > 0) {
+    if (arrivals.length > 0 ) {
+      pg.fill(tcc_light_grey);
+      pg.noStroke();
+      pg.rect(0, pg.height - 35, pg.width, 20)
+
       arr_idx = arrivals.map((a) => a.seq)
       arrivals.sort((a, b) => b.seq - a.seq)
       let filtered_arr = arrivals.filter((arr) => arr.seq <= stop_to_seq(obs_stop)) // need to deal with idx to stop conversion??
@@ -164,54 +166,66 @@ function sketch(p5: P5CanvasInstance<SignSketchProps>) {
       pg.rect(0, pg.height - 35, progress_end, 20)
       pg.triangle(progress_end, pg.height - 35, progress_end, pg.height - 15, progress_end + 10, pg.height - 25 )
       pg.pop()
-    }
     
     
-    for (let i = 1; i < n_stops+1; i++) {
-      
-      pg.strokeWeight(8);
-      
-      var ring_colour = (i < stop_idx) ? tcc_blue : tcc_white;
-      ring_colour = (i === stop_idx) ? tcc_grey : ring_colour;
-      ring_colour = (i === stop_idx && i === n_stops) ? tcc_yellow : ring_colour;
-      var spot_colour = (i < stop_idx) ? tcc_grey : tcc_grey;
-      spot_colour = (arr_idx.includes(i)) ? tcc_yellow: spot_colour;
-      var text_colour = (i < stop_idx) ? tcc_light_grey : tcc_white;
-      text_colour = (arr_idx.includes(i)) ? tcc_yellow: text_colour;
-      
+    
+      for (let i = 1; i < n_stops+1; i++) {
         
-      let x = station_margin_l + (i - 1) * station_spacing;
-      let y = pg.height - 25
+        pg.strokeWeight(8);
+        
+        var ring_colour = (i <= stop_idx) ? tcc_blue : tcc_white;
+        ring_colour = (arr_idx.includes(i)) ? tcc_grey : ring_colour;
+        ring_colour = (arr_idx.includes(i) && i === n_stops) ? tcc_yellow : ring_colour;
+        var spot_colour = (i < stop_idx) ? tcc_grey : tcc_grey;
+        spot_colour = (arr_idx.includes(i)) ? tcc_yellow: spot_colour;
+        var text_colour = (i < stop_idx) ? tcc_light_grey : tcc_white;
+        text_colour = (arr_idx.includes(i)) ? tcc_yellow: text_colour;
+        
+          
+        let x = station_margin_l + (i - 1) * station_spacing;
+        let y = pg.height - 25
+        
+        pg.stroke(ring_colour)
+        pg.fill(spot_colour)
+        
+        if (i === n_stops) {
+          pg.rectMode(p5.RADIUS)
+          pg.fill(tcc_red)
+          pg.rect(x, y, 15)
+          pg.rectMode(p5.CORNER)
+        } else if (i == (stop_to_seq(obs_stop))) {
+          pg.rectMode(p5.RADIUS)
+          pg.rect(x, y, 15)
+          pg.rectMode(p5.CORNER)
+        } else {
+          pg.circle(x, y, 30)
+        }
+        
+        let stop_name = (route_dir > 0) ? stop_short_names[15-i-1]: stop_short_names[i-1]
       
-      pg.stroke(ring_colour)
-      pg.fill(spot_colour)
-      
-      if (i === n_stops) {
-        pg.rectMode(p5.RADIUS)
-        pg.fill(tcc_red)
-        pg.rect(x, y, 15)
-        pg.rectMode(p5.CORNER)
-      } else if (i == (stop_to_seq(obs_stop))) {
-        pg.rectMode(p5.RADIUS)
-        pg.rect(x, y, 15)
-        pg.rectMode(p5.CORNER)
-      } else {
-        pg.circle(x, y, 30)
-      }
-      
-      let stop_name = (route_dir > 0) ? stop_short_names[15-i-1]: stop_short_names[i-1]
-    
-      pg.fill(text_colour);
+        pg.fill(text_colour);
+        pg.noStroke();
+        pg.translate(x, y);
+        pg.rotate(-30)
+        pg.textSize(17);
+        pg.textAlign(p5.LEFT, p5.CENTER);
+        pg.text("        "+stop_name, 0, -5);
+        pg.rotate(30)
+        pg.translate(-x, -y);
+        
+      }  
+    } else {
+
+      pg.fill(tcc_black);
       pg.noStroke();
-      pg.translate(x, y);
-      pg.rotate(-30)
-      pg.textSize(17);
-      pg.textAlign(p5.LEFT, p5.CENTER);
-      pg.text("        "+stop_name, 0, -5);
-      pg.rotate(30)
-      pg.translate(-x, -y);
-      
-    }  
+      pg.rect(0, pg.height - 100, pg.width, 90)
+
+      pg.fill(tcc_white);
+      pg.textSize(50);
+      pg.textAlign(p5.LEFT, p5.BOTTOM);
+      pg.text("No scheduled services.", 20, pg.height-25);
+    }
+
     
     let newH = p5.windowWidth/4.0;
     p5.image(pg, 0, (p5.windowHeight - newH)/2, p5.windowWidth, newH);
@@ -220,10 +234,6 @@ function sketch(p5: P5CanvasInstance<SignSketchProps>) {
   p5.windowResized = () => {
     p5.resizeCanvas(p5.windowWidth, p5.windowHeight)
   }
-
-  // p5.mousePressed = () =>  {
-    
-  // }
 
 }
 

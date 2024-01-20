@@ -29,6 +29,12 @@ export enum Stop {
 export interface Location {
   stop: Stop;
   dest: Stop;
+  trip_id: string;
   seq:  number;
   status?: Status;
+}
+
+export interface Arrival extends Location {
+  time: number
+  time_min: number
 }
