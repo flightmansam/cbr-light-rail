@@ -1,54 +1,77 @@
-import * as React from "react";
-import { ReactP5Wrapper } from "@p5-wrapper/react";
+import {
+  P5CanvasInstance,
+  SketchProps
+} from "@p5-wrapper/react";
 import montserrat from "./res/Montserrat/static/Montserrat-SemiBold.ttf"
 import tcLogo from './res/img/tcc_white.png'
+import {stop_short_names, head_sign_names} from "./constants"
+import {Location, Status, Stop} from './helpers'
 
 
-function sketch(p5) {
+type SignSketchProps = SketchProps & {
+  obs_stop: number;
+  dest_stop: number;
+  arrivals : Location[];
+}
+
+function sketch(p5: P5CanvasInstance<SignSketchProps>) {
   let pg;
+  let cvs;
 
   let font;
   let img;
 
-  const n_stops = 14;
-  let obs_stop = 11;
-  let dest_stop;
-  var route_dir;
+  const station_margin_l = 50;
+    const station_margin_r = 140;
 
-  const changeDest = (dest) => {
-    dest_stop = dest
+  const n_stops = 14;
+  var obs_stop;
+  var dest_stop;
+  var route_dir;
+  var arrivals = [];
+
+  const updateRouteDir = () => {
     route_dir = (obs_stop - dest_stop > 0) ? 1 : -1
     if (obs_stop === dest_stop) {
       if (dest_stop === 1) route_dir = 1
       else route_dir = -1
     }
   }
+
+  const changeDest = (dest: number) => {
+    dest_stop = dest
+    updateRouteDir()
+  }
   changeDest(1);
 
-  const station_margin_l = 50;
-  const station_margin_r = 140;
+  const changeStop = (stop: number) => {
+    obs_stop = stop
+    updateRouteDir()
+  }
+  changeStop(14);
 
-  const head_sign_names = {
-      1:'Alinga Street',
-      14:'Gungahlin Place'
+  const stop_to_seq = (stop: Stop) => {
+
+    switch (parseInt(dest_stop)){
+      case Stop.alg: {
+        return 15 - stop
+      }
+      case Stop.ggn: {
+        return stop
+      }
+      default: {
+        return 0
+      }
+    }
   }
 
-  const stop_short_names = [
-    'Alinga St',
-    'Elouera St',
-    'Ipima St',
-    'Macarthur Av',
-    'Dickson',
-    'Swinden St',
-    'Phillip Av',
-    'EPIC',
-    'Sandford St',
-    'Well Station',
-    'Nullarbor Av',
-    'Mapleton Av',
-    'Manning Clk',
-    'Gungahlin Pl',
-  ]
+  const fullscreen = () => {
+    if (p5.mouseX > 0 && p5.mouseX < p5.width && p5.mouseY > 0 && p5.mouseY < p5.height) {
+      let fs = p5.fullscreen();
+      p5.fullscreen(!fs);
+      p5.resizeCanvas(p5.windowWidth, p5.windowHeight)
+    }
+  }
 
   p5.preload = () => {
     // Creates a p5.Font object.
@@ -56,9 +79,24 @@ function sketch(p5) {
     img = p5.loadImage(tcLogo);
   }
 
+  p5.updateWithProps = (props: SignSketchProps) => {
+    if (props.obs_stop && props.obs_stop >= 0 && props.obs_stop <= n_stops) {
+      changeStop(props.obs_stop)
+    }
+
+    if (props.dest_stop && props.dest_stop >= 0 && props.dest_stop <= n_stops) {
+      changeDest(props.dest_stop)
+    }
+
+    if (props.arrivals) {
+      arrivals = props.arrivals
+    }
+  }
+
   p5.setup = () => {
-    p5.createCanvas(p5.windowWidth, p5.windowHeight);
+    cvs = p5.createCanvas(p5.windowWidth, p5.windowHeight);
     pg = p5.createGraphics(1200, 300);
+    cvs.doubleClicked(fullscreen);
   }
 
   p5.draw = () => {
@@ -95,8 +133,6 @@ function sketch(p5) {
     pg.textAlign(p5.LEFT, p5.BOTTOM);
     pg.text("Canberra", pg.width - (20 + 90), 54);
 
-
-    
     let im_scale = img.width / img.height;
     let sh = 35;
     let sw = sh*im_scale;
@@ -109,15 +145,27 @@ function sketch(p5) {
     
     let station_spacing = (pg.width - (station_margin_l+station_margin_r))/(n_stops - 1)
     
-    let stop_idx = 1 + (Math.round((p5.second() / 60) * 13))
+    var stop_idx = 0
+    var arr_idx = []
+
+    if (arrivals.length > 0) {
+      arr_idx = arrivals.map((a) => a.seq)
+      arrivals.sort((a, b) => b.seq - a.seq)
+      let filtered_arr = arrivals.filter((arr) => arr.seq <= stop_to_seq(obs_stop)) // need to deal with idx to stop conversion??
+      let next_arr = (filtered_arr.length > 0) ? filtered_arr[0] : null
+      stop_idx = (next_arr) ? next_arr.seq : 0
+      
+      var progress_end = station_margin_l + (stop_idx - 1.5) * station_spacing
+
+      if (next_arr && next_arr.status === Status.stopped_at) progress_end += (0.5) * station_spacing
+      
+      pg.push()
+      pg.fill(tcc_blue)
+      pg.rect(0, pg.height - 35, progress_end, 20)
+      pg.triangle(progress_end, pg.height - 35, progress_end, pg.height - 15, progress_end + 10, pg.height - 25 )
+      pg.pop()
+    }
     
-    let progress_end = station_margin_l + (stop_idx - 1.5) * station_spacing
-    
-    pg.push()
-    pg.fill(tcc_blue)
-    pg.rect(0, pg.height - 35, progress_end, 20)
-    pg.triangle(progress_end, pg.height - 35, progress_end, pg.height - 15, progress_end + 10, pg.height - 25 )
-    pg.pop()
     
     for (let i = 1; i < n_stops+1; i++) {
       
@@ -127,9 +175,9 @@ function sketch(p5) {
       ring_colour = (i === stop_idx) ? tcc_grey : ring_colour;
       ring_colour = (i === stop_idx && i === n_stops) ? tcc_yellow : ring_colour;
       var spot_colour = (i < stop_idx) ? tcc_grey : tcc_grey;
-      spot_colour = (i === stop_idx) ? tcc_yellow: spot_colour;
+      spot_colour = (arr_idx.includes(i)) ? tcc_yellow: spot_colour;
       var text_colour = (i < stop_idx) ? tcc_light_grey : tcc_white;
-      text_colour = (i === stop_idx) ? tcc_yellow: text_colour;
+      text_colour = (arr_idx.includes(i)) ? tcc_yellow: text_colour;
       
         
       let x = station_margin_l + (i - 1) * station_spacing;
@@ -143,7 +191,7 @@ function sketch(p5) {
         pg.fill(tcc_red)
         pg.rect(x, y, 15)
         pg.rectMode(p5.CORNER)
-      } else if (i === obs_stop) {
+      } else if (i == (stop_to_seq(obs_stop))) {
         pg.rectMode(p5.RADIUS)
         pg.rect(x, y, 15)
         pg.rectMode(p5.CORNER)
@@ -173,15 +221,13 @@ function sketch(p5) {
     p5.resizeCanvas(p5.windowWidth, p5.windowHeight)
   }
 
-  p5.mousePressed = () =>  {
-    if (p5.mouseX > 0 && p5.mouseX < p5.width && p5.mouseY > 0 && p5.mouseY < p5.height) {
-      let fs = p5.fullscreen();
-      p5.fullscreen(!fs);
-      p5.resizeCanvas(p5.windowWidth, p5.windowHeight)
-    }
-  }
+  // p5.mousePressed = () =>  {
+    
+  // }
+
 }
 
-export default function App() {
-  return <ReactP5Wrapper sketch={sketch}/>;
-}
+
+export default sketch
+
+  
