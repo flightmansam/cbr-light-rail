@@ -5,17 +5,24 @@ import {
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import sketch from './sign';
-import {get_live} from './data'
+import {get_arrivals} from './data'
+import { Stop, stop_to_seq} from "./helpers";
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
+const onHover = () => {
+  console.log("Hover")
+}
+
 function App() {
+
+
   const params = new URLSearchParams(window.location.search)
 
   const [state, setState] = useState({
-    obs_stop: (params.has("at")) ? params.get("at") : 14,
-    dest_stop: (params.has("to")) ? params.get("to") : 1,
+    obs_stop: (params.has("at")) ? parseInt(params.get("at")) : 14,
+    dest_stop: (params.has("to")) ? parseInt(params.get("to")) : 1,
   });
 
   const [arrivals, setArrivals] = useState([]);
@@ -23,8 +30,8 @@ function App() {
   useEffect(() => {
 
     async function fetchData() {
-      var new_locs = await get_live()
-      let dest = (state.dest_stop === 1) ? "alg" : "ggn";
+      var new_locs = await get_arrivals(stop_to_seq(state.obs_stop, state.dest_stop))
+      let dest = (state.dest_stop === 1) ? Stop.alg : Stop.ggn;
       new_locs = new_locs.filter((it) => it.dest === dest)
       return new_locs
     }
@@ -46,7 +53,10 @@ function App() {
 
 root.render(
   <React.StrictMode>
+    <div  onClick={onHover}>
     <App />
+    </div>
+
   </React.StrictMode>
 );
 

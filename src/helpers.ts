@@ -38,3 +38,19 @@ export interface Arrival extends Location {
   time: number
   time_min: number
 }
+
+
+export const stop_to_seq = (stop: Stop, dest_stop) => {
+
+  switch (parseInt(dest_stop)){
+    case Stop.alg: {
+      return 15 - stop
+    }
+    case Stop.ggn: {
+      return stop
+    }
+    default: {
+      return 0
+    }
+  }
+}

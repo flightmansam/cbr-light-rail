@@ -5,14 +5,14 @@ import {
 import montserrat from "./res/Montserrat/static/Montserrat-SemiBold.ttf"
 import tcLogo from './res/img/tcc_white.png'
 import {stop_short_names, head_sign_names} from "./constants"
-import {Location, Status, Stop} from './helpers'
+import {Arrival, Status, Stop, stop_to_seq} from './helpers'
 import dayjs from "dayjs";
 
 
 type SignSketchProps = SketchProps & {
   obs_stop: number;
   dest_stop: number;
-  arrivals : Location[];
+  arrivals : Arrival[];
 }
 
 function sketch(p5: P5CanvasInstance<SignSketchProps>) {
@@ -50,21 +50,6 @@ function sketch(p5: P5CanvasInstance<SignSketchProps>) {
     updateRouteDir()
   }
   changeStop(14);
-
-  const stop_to_seq = (stop: Stop) => {
-
-    switch (parseInt(dest_stop)){
-      case Stop.alg: {
-        return 15 - stop
-      }
-      case Stop.ggn: {
-        return stop
-      }
-      default: {
-        return 0
-      }
-    }
-  }
 
   const fullscreen = () => {
     if (p5.mouseX > 0 && p5.mouseX < p5.width && p5.mouseY > 0 && p5.mouseY < p5.height) {
@@ -153,10 +138,37 @@ function sketch(p5: P5CanvasInstance<SignSketchProps>) {
 
       arr_idx = arrivals.map((a) => a.seq)
       arrivals.sort((a, b) => b.seq - a.seq)
-      let filtered_arr = arrivals.filter((arr) => arr.seq <= stop_to_seq(obs_stop)) // need to deal with idx to stop conversion??
+      let filtered_arr = arrivals.filter((arr) => arr.seq <= stop_to_seq(obs_stop, dest_stop)) // need to deal with idx to stop conversion??
       let next_arr = (filtered_arr.length > 0) ? filtered_arr[0] : null
       stop_idx = (next_arr) ? next_arr.seq : 0
-      
+
+      pg.fill(tcc_white)
+      pg.textSize(40);
+      pg.textAlign(p5.RIGHT, p5.TOP);
+      pg.text("Departs", pg.width - 20, 65);  
+
+      if(next_arr){
+        var unit = "min"
+        if(next_arr.time_min < 0.5 && next_arr.time_min >= -1.0  ){
+          unit = "Due"
+        }
+        else if (next_arr.time_min < -1.0){
+          unit = "Delayed"
+        } else {
+          let time_str = `${Math.round(next_arr.time_min)}`
+          pg.textSize(80);
+          pg.textAlign(p5.RIGHT, p5.BOTTOM);
+          pg.text(time_str, pg.width - 200, 180);
+
+        }
+
+        pg.textSize(65);
+        pg.textAlign(p5.RIGHT, p5.BOTTOM);
+        pg.text(unit, pg.width - 20, 180);
+
+    }
+
+
       var progress_end = station_margin_l + (stop_idx - 1.5) * station_spacing
 
       if (next_arr && next_arr.status === Status.stopped_at) progress_end += (0.5) * station_spacing
@@ -164,6 +176,10 @@ function sketch(p5: P5CanvasInstance<SignSketchProps>) {
       pg.push()
       pg.fill(tcc_blue)
       pg.rect(0, pg.height - 35, progress_end, 20)
+      pg.fill(tcc_grey)
+      pg.rect(progress_end, pg.height - 35, 5, 20)
+      pg.triangle(progress_end+5, pg.height - 35, progress_end+5, pg.height - 15, progress_end + 15, pg.height - 25 )
+      pg.fill(tcc_blue)
       pg.triangle(progress_end, pg.height - 35, progress_end, pg.height - 15, progress_end + 10, pg.height - 25 )
       pg.pop()
     
@@ -193,7 +209,7 @@ function sketch(p5: P5CanvasInstance<SignSketchProps>) {
           pg.fill(tcc_red)
           pg.rect(x, y, 15)
           pg.rectMode(p5.CORNER)
-        } else if (i == (stop_to_seq(obs_stop))) {
+        } else if (i == (stop_to_seq(obs_stop, dest_stop))) {
           pg.rectMode(p5.RADIUS)
           pg.rect(x, y, 15)
           pg.rectMode(p5.CORNER)
