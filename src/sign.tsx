@@ -175,12 +175,12 @@ function sketch(p5: P5CanvasInstance<SignSketchProps>) {
       
       pg.push()
       pg.fill(tcc_blue)
-      pg.rect(0, pg.height - 35, progress_end, 20)
+      pg.rect(0, pg.height - 35, progress_end-4, 20)
       pg.fill(tcc_grey)
-      pg.rect(progress_end, pg.height - 35, 5, 20)
-      pg.triangle(progress_end+5, pg.height - 35, progress_end+5, pg.height - 15, progress_end + 15, pg.height - 25 )
+      pg.rect(progress_end-4, pg.height - 35, 8, 20)
+      pg.triangle(progress_end+4, pg.height - 35, progress_end+4, pg.height - 15, progress_end + 14 , pg.height - 25 )
       pg.fill(tcc_blue)
-      pg.triangle(progress_end, pg.height - 35, progress_end, pg.height - 15, progress_end + 10, pg.height - 25 )
+      pg.triangle(progress_end-4, pg.height - 35, progress_end-4, pg.height - 15, progress_end + 6, pg.height - 25 )
       pg.pop()
     
     
