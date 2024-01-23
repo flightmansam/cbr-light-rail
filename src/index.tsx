@@ -3,11 +3,11 @@ import {
   ReactP5Wrapper
 } from "@p5-wrapper/react";
 import ReactDOM from 'react-dom/client';
+import { BrowserRouter } from 'react-router-dom';
 import './index.css';
 import sketch from './sign';
 import {get_arrivals} from './data'
 import { Stop, stop_to_seq} from "./helpers";
-
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -22,7 +22,7 @@ function App() {
 
   const [state, setState] = useState({
     obs_stop: (params.has("at")) ? parseInt(params.get("at")) : 14,
-    dest_stop: (params.has("to")) ? parseInt(params.get("to")) : 1,
+    dest_stop: (params.has("to")) ? parseInt(params.get("to")) : 4,
   });
 
   const [arrivals, setArrivals] = useState([]);
@@ -52,11 +52,11 @@ function App() {
 }
 
 root.render(
-  <React.StrictMode>
+  <BrowserRouter basename="/rail">
     <div  onClick={onHover}>
     <App />
     </div>
 
-  </React.StrictMode>
+  </BrowserRouter>
 );
 
