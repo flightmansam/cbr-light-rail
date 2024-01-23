@@ -173,15 +173,25 @@ function sketch(p5: P5CanvasInstance<SignSketchProps>) {
 
       if (next_arr && next_arr.status === Status.stopped_at) progress_end += (0.5) * station_spacing
       
-      pg.push()
-      pg.fill(tcc_blue)
-      pg.rect(0, pg.height - 35, progress_end-4, 20)
+      //dark grey phantom arrow
       pg.fill(tcc_grey)
-      pg.rect(progress_end-4, pg.height - 35, 8, 20)
-      pg.triangle(progress_end+4, pg.height - 35, progress_end+4, pg.height - 15, progress_end + 14 , pg.height - 25 )
+      pg.beginShape()
+      pg.vertex(0, pg.height - 35)
+      pg.vertex(progress_end+4, pg.height - 35)
+      pg.vertex(progress_end+14, pg.height - 25)
+      pg.vertex(progress_end+4, pg.height - 15)
+      pg.vertex(0, pg.height - 15)
+      pg.endShape(pg.CLOSE)
+
+      // blue arrow on top
       pg.fill(tcc_blue)
-      pg.triangle(progress_end-4, pg.height - 35, progress_end-4, pg.height - 15, progress_end + 6, pg.height - 25 )
-      pg.pop()
+      pg.beginShape()
+      pg.vertex(0, pg.height - 35)
+      pg.vertex(progress_end-4, pg.height - 35)
+      pg.vertex(progress_end+6, pg.height - 25)
+      pg.vertex(progress_end-4, pg.height - 15)
+      pg.vertex(0, pg.height - 15)
+      pg.endShape(pg.CLOSE)
     
     
     
