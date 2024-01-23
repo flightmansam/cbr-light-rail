@@ -7,7 +7,7 @@ import { BrowserRouter } from 'react-router-dom';
 import './index.css';
 import sketch from './sign';
 import {get_arrivals} from './data'
-import { Stop, stop_to_seq} from "./helpers";
+import { Stop, stop_to_seq, DataStatus} from "./helpers";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -21,25 +21,26 @@ function App() {
   const params = new URLSearchParams(window.location.search)
 
   const [state, setState] = useState({
-    obs_stop: (params.has("at")) ? parseInt(params.get("at")) : 14,
-    dest_stop: (params.has("to")) ? parseInt(params.get("to")) : 4,
+    obs_stop: (params.has("at")) ? parseInt(params.get("at")) : 4,
+    dest_stop: (params.has("to")) ? parseInt(params.get("to")) : 1,
+    data_status: DataStatus.loading
   });
 
   const [arrivals, setArrivals] = useState([]);
 
   useEffect(() => {
-
-    async function fetchData() {
-      var new_locs = await get_arrivals(stop_to_seq(state.obs_stop, state.dest_stop))
-      let dest = (state.dest_stop === 1) ? Stop.alg : Stop.ggn;
-      new_locs = new_locs.filter((it) => it.dest === dest)
-      return new_locs
-    }
-
     const interval = setInterval(
       () => {
-        fetchData()
-          .then(arr => {setArrivals(arr)})
+        get_arrivals(stop_to_seq(state.obs_stop, state.dest_stop))
+          .then((req) => {
+            let dest = (state.dest_stop === 1) ? Stop.alg : Stop.ggn;
+            let new_locs = req.arrivals.filter((it) => it.dest === dest)
+            setState({
+              ...state,
+              data_status: req.data_status
+            })
+            setArrivals(new_locs)
+          })
       },
       1000)
 
@@ -48,7 +49,7 @@ function App() {
     };
   }, [arrivals, state]);
 
-  return <ReactP5Wrapper sketch={sketch} obs_stop={state.obs_stop} dest_stop={state.dest_stop} arrivals={arrivals} />;
+  return <ReactP5Wrapper sketch={sketch} obs_stop={state.obs_stop} dest_stop={state.dest_stop} arrivals={arrivals} data_status={state.data_status} />;
 }
 
 root.render(

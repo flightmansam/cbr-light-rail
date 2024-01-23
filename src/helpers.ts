@@ -7,6 +7,15 @@ export enum Status {
   unknown
 }
 
+export enum DataStatus {
+  live = 1,
+  no_scheduled, 
+  loading,
+  conn_err,
+
+  unknown
+}
+
 export enum Stop {
   alg=1,
   ela,

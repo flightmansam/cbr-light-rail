@@ -5,7 +5,7 @@ import {
 import montserrat from "./res/Montserrat/static/Montserrat-SemiBold.ttf"
 import tcLogo from './res/img/tcc_white.png'
 import {stop_short_names, head_sign_names} from "./constants"
-import {Arrival, Status, Stop, stop_to_seq} from './helpers'
+import {Arrival, Status, Stop, stop_to_seq, DataStatus} from './helpers'
 import dayjs from "dayjs";
 
 
@@ -13,6 +13,7 @@ type SignSketchProps = SketchProps & {
   obs_stop: number;
   dest_stop: number;
   arrivals : Arrival[];
+  data_status: DataStatus;
 }
 
 function sketch(p5: P5CanvasInstance<SignSketchProps>) {
@@ -29,6 +30,7 @@ function sketch(p5: P5CanvasInstance<SignSketchProps>) {
   var obs_stop;
   var dest_stop;
   var route_dir;
+  var data_status = DataStatus.loading
   var arrivals = [];
 
   const updateRouteDir = () => {
@@ -76,6 +78,10 @@ function sketch(p5: P5CanvasInstance<SignSketchProps>) {
 
     if (props.arrivals) {
       arrivals = props.arrivals
+    }
+
+    if (props.data_status) {
+      data_status = props.data_status
     }
   }
 
@@ -131,7 +137,7 @@ function sketch(p5: P5CanvasInstance<SignSketchProps>) {
     var stop_idx = 0
     var arr_idx = []
 
-    if (arrivals.length > 0 ) {
+    if (data_status == DataStatus.live ) {
       pg.fill(tcc_light_grey);
       pg.noStroke();
       pg.rect(0, pg.height - 35, pg.width, 20)
@@ -242,6 +248,22 @@ function sketch(p5: P5CanvasInstance<SignSketchProps>) {
       }  
     } else {
 
+      var text_str = ""
+      switch (data_status) {
+        case DataStatus.loading:
+          text_str = "Requesting data.."
+          break;
+        case DataStatus.no_scheduled:
+          text_str = "No scheduled services"
+          break;       
+        case DataStatus.conn_err:
+          text_str = "Data connection error."
+          break;    
+      
+        default:
+          break;
+      }
+
       pg.fill(tcc_black);
       pg.noStroke();
       pg.rect(0, pg.height - 100, pg.width, 90)
@@ -249,7 +271,7 @@ function sketch(p5: P5CanvasInstance<SignSketchProps>) {
       pg.fill(tcc_white);
       pg.textSize(50);
       pg.textAlign(p5.LEFT, p5.BOTTOM);
-      pg.text("No scheduled services.", 20, pg.height-25);
+      pg.text(text_str, 20, pg.height-25);
     }
 
     
