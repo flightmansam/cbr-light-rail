@@ -2,7 +2,7 @@ import axios from "axios"
 import { code_to_stop } from "./constants";
 import { Status, Location, Arrival, Stop } from "./helpers";
 
-let api_url = process.env.API_URL || 'http://localhost:4050'
+let api_url = process.env.REACT_APP_API_URL
 
 async function get_live(){
     const response = await axios.get(`${api_url}/live`) //fetch("https://jsonplaceholder.typicode.com/users")//
