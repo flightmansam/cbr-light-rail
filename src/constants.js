@@ -2,6 +2,8 @@ import {Stop} from './helpers'
 
 const head_sign_names = {
     1:'Alinga St',
+    8:'EPIC',
+    9:'Sandford St',
     14:'Gungahlin Pl'
 }
 

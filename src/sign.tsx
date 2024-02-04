@@ -2,7 +2,7 @@ import {
   P5CanvasInstance,
   SketchProps
 } from "@p5-wrapper/react";
-import montserrat from "./res/Montserrat/static/Montserrat-SemiBold.ttf"
+import akkurat from "./res/Akkurat-Bold.ttf"
 import tcLogo from './res/img/tcc_white.png'
 import {stop_short_names, head_sign_names} from "./constants"
 import {Arrival, Status, Stop, stop_to_seq, DataStatus} from './helpers'
@@ -63,7 +63,7 @@ function sketch(p5: P5CanvasInstance<SignSketchProps>) {
 
   p5.preload = () => {
     // Creates a p5.Font object.
-    font = p5.loadFont(montserrat);
+    font = p5.loadFont(akkurat);
     img = p5.loadImage(tcLogo);
   }
 
@@ -93,9 +93,9 @@ function sketch(p5: P5CanvasInstance<SignSketchProps>) {
 
   p5.draw = () => {
     p5.clear();
-    let tcc_grey = p5.color(47, 59, 68);
+    let tcc_grey = p5.color(51, 62, 72);
     let tcc_light_grey = p5.color(115, 130, 135);
-    let tcc_red = p5.color(208, 46, 33);
+    let tcc_red = p5.color(189, 0, 33);
     let tcc_blue = p5.color(69, 137, 204);
     let tcc_black = p5.color('black');
     let tcc_white = p5.color('white');
@@ -116,10 +116,6 @@ function sketch(p5: P5CanvasInstance<SignSketchProps>) {
     let tm_str = dayjs()
     pg.text(`${tm_str.format("HH:mm")}`, 20, 30);
     
-    pg.textSize(80);
-    pg.textAlign(p5.LEFT, p5.BOTTOM);
-    pg.text(head_sign_names[dest_stop], 20, 180);
-    
     pg.textSize(17);
     pg.textAlign(p5.LEFT, p5.TOP);
     pg.text("Transport", pg.width - (20 + 90), 16);
@@ -138,15 +134,20 @@ function sketch(p5: P5CanvasInstance<SignSketchProps>) {
     var arr_idx = []
 
     if (data_status == DataStatus.live ) {
-      pg.fill(tcc_light_grey);
-      pg.noStroke();
-      pg.rect(0, pg.height - 35, pg.width, 20)
 
       arr_idx = arrivals.map((a) => a.seq)
       arrivals.sort((a, b) => b.seq - a.seq)
       let filtered_arr = arrivals.filter((arr) => arr.seq <= stop_to_seq(obs_stop, dest_stop)) // need to deal with idx to stop conversion??
       let next_arr = (filtered_arr.length > 0) ? filtered_arr[0] : null
       stop_idx = (next_arr) ? next_arr.seq : 0
+
+      pg.textSize(80);
+      pg.textAlign(p5.LEFT, p5.BOTTOM);
+      pg.text(head_sign_names[next_arr.dest], 20, 180);
+
+      pg.fill(tcc_light_grey);
+      pg.noStroke();
+      pg.rect(0, pg.height - 35, pg.width, 20)
 
       pg.fill(tcc_white)
       pg.textSize(40);

@@ -55,8 +55,34 @@ export const stop_to_seq = (stop: Stop, dest_stop) => {
     case Stop.alg: {
       return 15 - stop
     }
+    case Stop.sfd: {
+      return 15 - stop
+    }
+    case Stop.epc: {
+      return stop
+    }
     case Stop.ggn: {
       return stop
+    }
+    default: {
+      return 0
+    }
+  }
+}
+
+export const get_route_dir = (stop: Stop) => {
+  switch (stop){
+    case Stop.alg: {
+      return 1
+    }
+    case Stop.sfd: {
+      return 1
+    }
+    case Stop.epc: {
+      return 0
+    }
+    case Stop.ggn: {
+      return 0
     }
     default: {
       return 0

@@ -7,7 +7,7 @@ import { BrowserRouter } from 'react-router-dom';
 import './index.css';
 import sketch from './sign';
 import {get_arrivals} from './data'
-import { Stop, stop_to_seq, DataStatus} from "./helpers";
+import { Stop, stop_to_seq, get_route_dir, DataStatus} from "./helpers";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -33,8 +33,10 @@ function App() {
       () => {
         get_arrivals(stop_to_seq(state.obs_stop, state.dest_stop))
           .then((req) => {
-            let dest = (state.dest_stop === 1) ? Stop.alg : Stop.ggn;
-            let new_locs = req.arrivals.filter((it) => it.dest === dest)
+            let dest_dir = (state.dest_stop === 1) ? 1 : 0;
+
+
+            let new_locs = req.arrivals.filter((it) => get_route_dir(it.dest) === dest_dir)
             setState({
               ...state,
               data_status: req.data_status
