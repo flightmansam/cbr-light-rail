@@ -141,9 +141,11 @@ function sketch(p5: P5CanvasInstance<SignSketchProps>) {
       let next_arr = (filtered_arr.length > 0) ? filtered_arr[0] : null
       stop_idx = (next_arr) ? next_arr.seq : 0
 
-      pg.textSize(80);
-      pg.textAlign(p5.LEFT, p5.BOTTOM);
-      pg.text(head_sign_names[next_arr.dest], 20, 180);
+      if (next_arr && next_arr.dest) {
+        pg.textSize(80);
+        pg.textAlign(p5.LEFT, p5.BOTTOM);
+        pg.text(head_sign_names[next_arr.dest], 20, 180);
+      }
 
       pg.fill(tcc_light_grey);
       pg.noStroke();
