@@ -65,23 +65,27 @@ async function get_arrivals(seq: number){
             var data_status = DataStatus.loading
             if(response.status === 200) {
                 let data = response.data
-                data_status = DataStatus.live
+                data_status = DataStatus.no_scheduled
                 for (let v of data) {
                     var status;
                     switch (v.Location.status) {
                     case "incoming_at": {
+                        data_status = DataStatus.live
                         status = Status.incoming_at
                         break;
                     }
                     case "stopped_at": {
+                        data_status = DataStatus.live
                         status = Status.stopped_at
                         break;
                     }
                     case "in_transit_to": {
+                        data_status = DataStatus.live
                         status = Status.in_transit_to
                         break;
                     }
                     case "scheduled": {
+                        data_status = DataStatus.live
                         status = Status.scheduled
                         break;
                     }

@@ -5,7 +5,7 @@ import {
 import akkurat from "./res/Akkurat-Bold.ttf"
 import tcLogo from './res/img/tcc_white.png'
 import {stop_short_names, head_sign_names} from "./constants"
-import {Arrival, Status, Stop, stop_to_seq, DataStatus} from './helpers'
+import {Arrival, Status, stop_to_seq, DataStatus} from './helpers'
 import dayjs from "dayjs";
 
 
@@ -14,6 +14,16 @@ type SignSketchProps = SketchProps & {
   dest_stop: number;
   arrivals : Arrival[];
   data_status: DataStatus;
+}
+
+function is_valid_next_arr(arr: Arrival, obs_stop, dest_stop) {
+  let seq = stop_to_seq(obs_stop, dest_stop);
+  if (arr.seq <= seq){
+    if (arr.seq == seq && arr.status == Status.stopped_at && arr.time_min < -0.16667) return false
+   return true 
+  }
+
+  return false
 }
 
 function sketch(p5: P5CanvasInstance<SignSketchProps>) {
@@ -137,7 +147,7 @@ function sketch(p5: P5CanvasInstance<SignSketchProps>) {
 
       arr_idx = arrivals.map((a) => a.seq)
       arrivals.sort((a, b) => b.seq - a.seq)
-      let filtered_arr = arrivals.filter((arr) => arr.seq <= stop_to_seq(obs_stop, dest_stop)) // need to deal with idx to stop conversion??
+      let filtered_arr = arrivals.filter((arr) => is_valid_next_arr(arr, obs_stop, dest_stop)) // need to deal with idx to stop conversion??
       let next_arr = (filtered_arr.length > 0) ? filtered_arr[0] : null
       stop_idx = (next_arr) ? next_arr.seq : 0
 
@@ -164,7 +174,7 @@ function sketch(p5: P5CanvasInstance<SignSketchProps>) {
         else if (next_arr.time_min < -1.0){
           unit = "Delayed"
         } else {
-          let time_str = `${Math.round(next_arr.time_min)}`
+          let time_str = `${Math.floor(next_arr.time_min)}`
           pg.textSize(80);
           pg.textAlign(p5.RIGHT, p5.BOTTOM);
           pg.text(time_str, pg.width - 200, 180);
