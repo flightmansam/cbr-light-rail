@@ -168,16 +168,21 @@ function sketch(p5: P5CanvasInstance<SignSketchProps>) {
 
       if(next_arr){
         var unit = "min"
-        if(next_arr.time_min < 0.5 && next_arr.time_min >= -1.0  ){
+        if(next_arr.time_min < 1.0 && next_arr.time_min >= -1.0  ){
           unit = "Due"
         }
-        else if (next_arr.time_min < -1.0){
+        else if (next_arr.time_min < -5.0){
           unit = "Delayed"
         } else {
-          let time_str = `${Math.floor(next_arr.time_min)}`
+          var time_str = `${Math.floor(Math.abs(next_arr.time_min))}`
+          var tm_offset = 0;
+          if (next_arr.time_min < 0) {
+            unit += " late"
+            tm_offset = 80
+          }
           pg.textSize(80);
           pg.textAlign(p5.RIGHT, p5.BOTTOM);
-          pg.text(time_str, pg.width - 200, 180);
+          pg.text(time_str, pg.width - 200 - tm_offset, 183);
 
         }
 
