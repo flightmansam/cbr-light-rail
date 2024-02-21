@@ -56,7 +56,7 @@ function App() {
 
 root.render(
   <BrowserRouter basename="/rail">
-    <div  onClick={onHover}>
+    <div>
     <App />
     </div>
 

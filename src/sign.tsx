@@ -40,6 +40,7 @@ function sketch(p5: P5CanvasInstance<SignSketchProps>) {
   var obs_stop;
   var dest_stop;
   var route_dir;
+  var click_state = 0;
   var data_status = DataStatus.loading
   var arrivals = [];
 
@@ -71,6 +72,8 @@ function sketch(p5: P5CanvasInstance<SignSketchProps>) {
     }
   }
 
+  
+
   p5.preload = () => {
     // Creates a p5.Font object.
     font = p5.loadFont(akkurat);
@@ -99,6 +102,11 @@ function sketch(p5: P5CanvasInstance<SignSketchProps>) {
     cvs = p5.createCanvas(p5.windowWidth, p5.windowHeight);
     pg = p5.createGraphics(1200, 300);
     cvs.doubleClicked(fullscreen);
+
+    p5.mouseClicked = () => {
+      console.log(click_state)
+      click_state = (click_state == 1) ? 0 : 1
+    }
   }
 
   p5.draw = () => {
@@ -136,8 +144,8 @@ function sketch(p5: P5CanvasInstance<SignSketchProps>) {
     let sh = 35;
     let sw = sh*im_scale;
     pg.image(img, pg.width-(20+sw+100), 17.5, sw, sh)
-    
-    
+
+
     let station_spacing = (pg.width - (station_margin_l+station_margin_r))/(n_stops - 1)
     
     var stop_idx = 0
@@ -157,9 +165,6 @@ function sketch(p5: P5CanvasInstance<SignSketchProps>) {
         pg.text(head_sign_names[next_arr.dest], 20, 180);
       }
 
-      pg.fill(tcc_light_grey);
-      pg.noStroke();
-      pg.rect(0, pg.height - 35, pg.width, 20)
 
       pg.fill(tcc_white)
       pg.textSize(40);
@@ -191,80 +196,120 @@ function sketch(p5: P5CanvasInstance<SignSketchProps>) {
         pg.text(unit, pg.width - 20, 180);
 
     }
+    
+    
+      if (click_state == 0) {
+
+        pg.fill(tcc_light_grey);
+        pg.noStroke();
+        pg.rect(0, pg.height - 35, pg.width, 20)
 
 
-      var progress_end = station_margin_l + (stop_idx - 1.5) * station_spacing
+        var progress_end = station_margin_l + (stop_idx - 1.5) * station_spacing
 
-      if (next_arr && next_arr.status === Status.stopped_at) progress_end += (0.5) * station_spacing
+        if (next_arr && next_arr.status === Status.stopped_at) progress_end += (0.5) * station_spacing
+        
+        //dark grey phantom arrow
+        pg.fill(tcc_grey)
+        pg.beginShape()
+        pg.vertex(0, pg.height - 35)
+        pg.vertex(progress_end+4, pg.height - 35)
+        pg.vertex(progress_end+14, pg.height - 25)
+        pg.vertex(progress_end+4, pg.height - 15)
+        pg.vertex(0, pg.height - 15)
+        pg.endShape(pg.CLOSE)
+
+        // blue arrow on top
+        pg.fill(tcc_blue)
+        pg.beginShape()
+        pg.vertex(0, pg.height - 35)
+        pg.vertex(progress_end-4, pg.height - 35)
+        pg.vertex(progress_end+6, pg.height - 25)
+        pg.vertex(progress_end-4, pg.height - 15)
+        pg.vertex(0, pg.height - 15)
+        pg.endShape(pg.CLOSE)
       
-      //dark grey phantom arrow
-      pg.fill(tcc_grey)
-      pg.beginShape()
-      pg.vertex(0, pg.height - 35)
-      pg.vertex(progress_end+4, pg.height - 35)
-      pg.vertex(progress_end+14, pg.height - 25)
-      pg.vertex(progress_end+4, pg.height - 15)
-      pg.vertex(0, pg.height - 15)
-      pg.endShape(pg.CLOSE)
-
-      // blue arrow on top
-      pg.fill(tcc_blue)
-      pg.beginShape()
-      pg.vertex(0, pg.height - 35)
-      pg.vertex(progress_end-4, pg.height - 35)
-      pg.vertex(progress_end+6, pg.height - 25)
-      pg.vertex(progress_end-4, pg.height - 15)
-      pg.vertex(0, pg.height - 15)
-      pg.endShape(pg.CLOSE)
-    
-    
-    
-      for (let i = 1; i < n_stops+1; i++) {
-        
-        pg.strokeWeight(8);
-        
-        var ring_colour = (i <= stop_idx) ? tcc_blue : tcc_white;
-        ring_colour = (arr_idx.includes(i)) ? tcc_grey : ring_colour;
-        ring_colour = (arr_idx.includes(i) && i === n_stops) ? tcc_yellow : ring_colour;
-        var spot_colour = (i < stop_idx) ? tcc_grey : tcc_grey;
-        spot_colour = (arr_idx.includes(i)) ? tcc_yellow: spot_colour;
-        var text_colour = (i < stop_idx) ? tcc_light_grey : tcc_white;
-        text_colour = (arr_idx.includes(i)) ? tcc_yellow: text_colour;
-        
+      
+      
+        for (let i = 1; i < n_stops+1; i++) {
           
-        let x = station_margin_l + (i - 1) * station_spacing;
-        let y = pg.height - 25
+          pg.strokeWeight(8);
+          
+          var ring_colour = (i <= stop_idx) ? tcc_blue : tcc_white;
+          ring_colour = (arr_idx.includes(i)) ? tcc_grey : ring_colour;
+          ring_colour = (arr_idx.includes(i) && i === n_stops) ? tcc_yellow : ring_colour;
+          var spot_colour = (i < stop_idx) ? tcc_grey : tcc_grey;
+          spot_colour = (arr_idx.includes(i)) ? tcc_yellow: spot_colour;
+          var text_colour = (i < stop_idx) ? tcc_light_grey : tcc_white;
+          text_colour = (arr_idx.includes(i)) ? tcc_yellow: text_colour;
+          
+            
+          let x = station_margin_l + (i - 1) * station_spacing;
+          let y = pg.height - 25
+          
+          pg.stroke(ring_colour)
+          pg.fill(spot_colour)
+          
+          if (i === n_stops) {
+            pg.rectMode(p5.RADIUS)
+            pg.fill(tcc_red)
+            pg.rect(x, y, 15)
+            pg.rectMode(p5.CORNER)
+          } else if (i == (stop_to_seq(obs_stop, dest_stop))) {
+            pg.rectMode(p5.RADIUS)
+            pg.rect(x, y, 15)
+            pg.rectMode(p5.CORNER)
+          } else {
+            pg.circle(x, y, 30)
+          }
+          
+          let stop_name = (route_dir > 0) ? stop_short_names[15-i-1]: stop_short_names[i-1]
         
-        pg.stroke(ring_colour)
-        pg.fill(spot_colour)
-        
-        if (i === n_stops) {
-          pg.rectMode(p5.RADIUS)
-          pg.fill(tcc_red)
-          pg.rect(x, y, 15)
-          pg.rectMode(p5.CORNER)
-        } else if (i == (stop_to_seq(obs_stop, dest_stop))) {
-          pg.rectMode(p5.RADIUS)
-          pg.rect(x, y, 15)
-          pg.rectMode(p5.CORNER)
-        } else {
-          pg.circle(x, y, 30)
+          pg.fill(text_colour);
+          pg.noStroke();
+          pg.translate(x, y);
+          pg.rotate(-30)
+          pg.textSize(17);
+          pg.textAlign(p5.LEFT, p5.CENTER);
+          pg.text("        "+stop_name, 0, -5);
+          pg.rotate(30)
+          pg.translate(-x, -y);
+          
+        }  
+      }  else { //click_state = 0
+        pg.fill(tcc_black);
+        pg.noStroke();
+        pg.rect(0, pg.height - 100, pg.width, 90)
+
+
+        pg.fill(tcc_white);
+        pg.textSize(50);
+
+      
+        if (filtered_arr.length > 0){
+          if (filtered_arr.length > 1 ) {
+            pg.textAlign(p5.LEFT, p5.BOTTOM);
+            pg.text(`Next: ${head_sign_names[filtered_arr[1].dest]}`, 20, pg.height-25)
+
+            pg.textAlign(p5.RIGHT, p5.BOTTOM);
+            time_str =  `${Math.floor(Math.abs(filtered_arr[1].time_min))} min |`
+            pg.text(time_str, 600, pg.height-25);
+          }
+          if (filtered_arr.length > 2 ) {
+            pg.textAlign(p5.LEFT, p5.BOTTOM);
+            pg.text(`Next: ${head_sign_names[filtered_arr[1].dest]}`, 620, pg.height-25)
+            
+            pg.textAlign(p5.RIGHT, p5.BOTTOM);
+            time_str = `${Math.floor(Math.abs(filtered_arr[2].time_min))} min  `
+            pg.text(time_str, pg.width, pg.height-25);
+          }
+
         }
         
-        let stop_name = (route_dir > 0) ? stop_short_names[15-i-1]: stop_short_names[i-1]
-      
-        pg.fill(text_colour);
-        pg.noStroke();
-        pg.translate(x, y);
-        pg.rotate(-30)
-        pg.textSize(17);
-        pg.textAlign(p5.LEFT, p5.CENTER);
-        pg.text("        "+stop_name, 0, -5);
-        pg.rotate(30)
-        pg.translate(-x, -y);
-        
-      }  
-    } else {
+
+
+      }
+    } else { // no data
 
       var text_str = ""
       switch (data_status) {
