@@ -5,7 +5,6 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #333E48;
 }
 
 code {
@@ -13,8 +12,18 @@ code {
     monospace;
 }
 
-html, body {margin: 0; height: 100%; overflow: hidden}
+html, body {margin: 0; height: 100%}
 
-* {
-  min-height: 0px;
+.menu {
+  overflow:scroll;
+  background-color: #333E48;
 }
+
+.app {
+  overflow:hidden;
+  background-color: black;
+}
+
+/* * {
+  min-height: 0px;
+} */

@@ -52,7 +52,11 @@ function App() {
     };
   }, [arrivals, state]);
 
-  return <ReactP5Wrapper sketch={sketch} obs_stop={state.obs_stop} dest_stop={state.dest_stop} arrivals={arrivals} data_status={state.data_status} />;
+  return (
+  <div className="app">
+    <ReactP5Wrapper sketch={sketch} obs_stop={state.obs_stop} dest_stop={state.dest_stop} arrivals={arrivals} data_status={state.data_status} />
+  </div>
+  );
 }
 
 root.render(
