@@ -3,9 +3,10 @@ import {
   ReactP5Wrapper
 } from "@p5-wrapper/react";
 import ReactDOM from 'react-dom/client';
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './index.css';
 import sketch from './sign';
+import Menu from "./menu";
 import {get_arrivals} from './data'
 import { Stop, stop_to_seq, get_route_dir, DataStatus} from "./helpers";
 
@@ -55,10 +56,13 @@ function App() {
 }
 
 root.render(
-  <BrowserRouter basename="/rail">
-    <div>
-    <App />
-    </div>
+  <BrowserRouter basename="/">
+    <Routes>
+      <Route path = "/" element = { <Menu />} />
+      <Route path="/rail" element = {<App />}/>
+      
+    </Routes>
+    
 
   </BrowserRouter>
 );
