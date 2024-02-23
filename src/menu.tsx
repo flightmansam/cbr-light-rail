@@ -144,7 +144,7 @@ function Menu() {
             If you want to know how it works, add some suggestions, report bugs or contact(/hire) me, 
             the link to the GitHub repos are below. </Typography>
 
-        <Link href="https://github.com/flightmansam/cbr-light-rail-react"><b>Link the web app repo</b></Link>
+        <Link href="https://github.com/flightmansam/cbr-light-rail-react"><b>Link to the web app repo</b></Link>
         <Link href="https://github.com/flightmansam/cbr-light-rail-data"><b>Link to my data API repo</b></Link>
         <Link href="https://github.com/flightmansam"><b>Link to me!</b></Link>
         
