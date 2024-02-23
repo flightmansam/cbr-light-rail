@@ -285,23 +285,27 @@ function sketch(p5: P5CanvasInstance<SignSketchProps>) {
         pg.fill(tcc_white);
         pg.textSize(50);
 
-      
+        pg.textAlign(p5.MIDDLE, p5.BOTTOM);
+        pg.text("|", 605, pg.height-25);
+
+
+        pg.textSize(45);
         if (filtered_arr.length > 0){
           if (filtered_arr.length > 1 ) {
             pg.textAlign(p5.LEFT, p5.BOTTOM);
             pg.text(`Next: ${head_sign_names[filtered_arr[1].dest]}`, 20, pg.height-25)
 
             pg.textAlign(p5.RIGHT, p5.BOTTOM);
-            time_str =  `${Math.floor(Math.abs(filtered_arr[1].time_min))} min |`
-            pg.text(time_str, 600, pg.height-25);
+            time_str =  `${Math.floor(Math.abs(filtered_arr[1].time_min))} min`
+            pg.text(time_str, 580, pg.height-25);
           }
           if (filtered_arr.length > 2 ) {
             pg.textAlign(p5.LEFT, p5.BOTTOM);
             pg.text(`Next: ${head_sign_names[filtered_arr[1].dest]}`, 620, pg.height-25)
             
             pg.textAlign(p5.RIGHT, p5.BOTTOM);
-            time_str = `${Math.floor(Math.abs(filtered_arr[2].time_min))} min  `
-            pg.text(time_str, pg.width, pg.height-25);
+            time_str = `${Math.floor(Math.abs(filtered_arr[2].time_min))} min`
+            pg.text(time_str, pg.width-20, pg.height-25);
           }
 
         }
