@@ -16,7 +16,10 @@ const theme = createTheme({
       primary: {
         main: '#BD0021',
         contrastText: '#FFFFFF',
-        
+      },
+      action:{
+        active:'white',
+        selected: 'blue'
       }
     },
     components: {
@@ -133,17 +136,17 @@ function Menu() {
 
         <Typography variant="body1">
             <b>What is this anyway?</b> <br></br>
-            I wrote this web app which takes publically available live data from transport 
-            canberra and displays it for each of the light rail stops. I have been inspired
+            I wrote this web app which takes publically available live data from Transport 
+            Canberra and displays it for each of the light rail stops. I have been inspired
             to make the graphics similar to the ones displayed at the actual stations.
             It does differ a little from the real world one as I have made my own modifications because... I can! This web app is 
             still under development and may have a few bugs now and again, but it is open source!
             If you want to know how it works, add some suggestions, report bugs or contact(/hire) me, 
             the link to the GitHub repos are below. </Typography>
 
-        <Link href="https://github.com/flightmansam/cbr-light-rail-react">Link the web app repo</Link>
-        <Link href="https://github.com/flightmansam/cbr-light-rail-data">Link to my data API repo</Link>
-        <Link href="https://github.com/flightmansam">Link to me!</Link>
+        <Link href="https://github.com/flightmansam/cbr-light-rail-react"><b>Link the web app repo</b></Link>
+        <Link href="https://github.com/flightmansam/cbr-light-rail-data"><b>Link to my data API repo</b></Link>
+        <Link href="https://github.com/flightmansam"><b>Link to me!</b></Link>
         
         <Typography variant="body1">
             This app is completely unoffical and is by no means affiliated with Transort Canberra so please don't get up in 
@@ -152,7 +155,7 @@ function Menu() {
         </Typography>
 
         <Typography variant="body1" align="right">
-        Ver. 1.1 - 22nd Feb
+        Ver. 1.2 - 23rd Feb
         </Typography>
         
         </Stack>
