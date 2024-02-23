@@ -151,7 +151,7 @@ function sketch(p5: P5CanvasInstance<SignSketchProps>) {
     var stop_idx = 0
     var arr_idx = []
 
-    if (data_status == DataStatus.live ) {
+    if (data_status == DataStatus.live || data_status==DataStatus.no_scheduled ) {
 
       arr_idx = arrivals.map((a) => a.seq)
       arrivals.sort((a, b) => b.seq - a.seq)
@@ -289,8 +289,9 @@ function sketch(p5: P5CanvasInstance<SignSketchProps>) {
         pg.text("|", 605, pg.height-25);
 
 
-        pg.textSize(45);
+
         if (filtered_arr.length > 0){
+          pg.textSize(45);
           if (filtered_arr.length > 1 ) {
             pg.textAlign(p5.LEFT, p5.BOTTOM);
             pg.text(`Next: ${head_sign_names[filtered_arr[1].dest]}`, 20, pg.height-25)
@@ -308,21 +309,19 @@ function sketch(p5: P5CanvasInstance<SignSketchProps>) {
             pg.text(time_str, pg.width-20, pg.height-25);
           }
 
+        } else { // no scheduled
+          pg.textAlign(p5.LEFT, p5.BOTTOM);
+          pg.text("No scheduled services", 20, pg.height-25);
         }
         
-
-
       }
     } else { // no data
 
       var text_str = ""
       switch (data_status) {
         case DataStatus.loading:
-          text_str = "Requesting data.."
-          break;
-        case DataStatus.no_scheduled:
-          text_str = "No scheduled services"
-          break;       
+          text_str = "Requesting data..."
+          break;  
         case DataStatus.conn_err:
           text_str = "Data connection error."
           break;    
