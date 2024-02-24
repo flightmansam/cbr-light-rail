@@ -94,7 +94,7 @@ function Menu() {
             You can tap the display once to show future arrivals and double tap 
             to go full screen (except for iPhone for some reason?).</Typography>
         
-        <Divider>Towards</Divider>
+        <Divider>Which direction are you heading?</Divider>
         <ToggleButtonGroup
           orientation="vertical"
           value={dest}
@@ -110,7 +110,7 @@ function Menu() {
         </ToggleButtonGroup>
         <br></br>
 
-        <Divider>Station</Divider>
+        <Divider>Which station are you departing from?</Divider>
         <ButtonGroup 
             orientation="vertical"
             variant="contained" 
@@ -136,7 +136,7 @@ function Menu() {
 
         <Typography variant="body1">
             <b>What is this anyway?</b> <br></br>
-            I wrote this web app which takes publically available live data from Transport 
+            I wrote this web app which takes publicly available live data from Transport
             Canberra and displays it for each of the light rail stops. I have been inspired
             to make the graphics similar to the ones displayed at the actual stations.
             It does differ a little from the real world one as I have made my own modifications because... I can! This web app is 
@@ -149,13 +149,13 @@ function Menu() {
         <Link href="https://github.com/flightmansam"><b>Link to me!</b></Link>
         
         <Typography variant="body1">
-            This app is completely unoffical and is by no means affiliated with Transort Canberra so please don't get up in 
+            This app is completely unofficial and is by no means affiliated with Transport Canberra so please don't get up in 
             their grill (unless you want to show off how awesome of a job I have done!). Also there is no analytics or data tracking. 
             Hopefully this doesn't go too viral because this app is only hosted on a server running in my living room.
         </Typography>
 
         <Typography variant="body1" align="right">
-        Ver. 1.2 - 23rd Feb
+        Ver. 1.3 - 24th Feb
         </Typography>
         
         </Stack>

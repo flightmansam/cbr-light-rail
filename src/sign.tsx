@@ -340,9 +340,21 @@ function sketch(p5: P5CanvasInstance<SignSketchProps>) {
       pg.text(text_str, 20, pg.height-25);
     }
 
+    // phone mode!
+    if (p5.windowHeight >= p5.windowWidth) {
+      p5.angleMode(p5.DEGREES);
+      let newH = p5.windowHeight/4.0;
+      p5.translate((p5.windowWidth + newH)/2, 0)
+      p5.rotate(90)
+      p5.image(pg, 0, 0, p5.windowHeight, newH);
+      p5.rotate(-90)
+      p5.translate(-(p5.windowWidth + newH)/2, 0)
+
+    } else { //desktop mode
+      let newH = p5.windowWidth/4.0;
+      p5.image(pg, 0, (p5.windowHeight - newH)/2, p5.windowWidth, newH);
+    }
     
-    let newH = p5.windowWidth/4.0;
-    p5.image(pg, 0, (p5.windowHeight - newH)/2, p5.windowWidth, newH);
   }
 
   p5.windowResized = () => {

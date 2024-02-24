@@ -22,8 +22,5 @@ html, body {margin: 0; height: 100%}
 .app {
   overflow:hidden;
   background-color: black;
-}
-
-/* * {
   min-height: 0px;
-} */
+}
