@@ -1,1 +1,10 @@
-# More info soon!
+Welcome to the code base for the webapp side of the [Canberra Light Rail Tracker](https://cbr-transport.au).
+
+## Key differences from the 'real' thing.
+I was inspired by Transport Canberra's (TC) light rail signage. But as I began to code it to replicate all of the features I found there were bits I had always wanted to see. This lead this version to have the following main differences.
+1. I plot all of the current vehicles on a route. TC's version only puts a yellow dot where the next due vehicle is. I wanted to have all the available information there for people to see. It's fun to see when the route fills up during the peak times!
+2. The official TC sign at the stops has the most up to date information of the locations of light rail vehicles from their internal tracking system. My information is based on snapshots of the network that TC does every 15 seconds. So the timing on their sign and on mine could be up to 15ish seconds out of sync.
+3. The "Departs [at]" time of TC takes account for delays (I think?). Mine just shows the time until the published timetable schedule. However mine does notify when the vehicle is behind schedule. I could be fancier at how I implement this. This might be another reason you see a difference in the timing between mine and the official TC sign.
+4. I have adjusted the font and icon sizes to be more mobile screen readable.
+5. The route progress indicator on mine only goes from left to right. TCs version depends on whether the vehicle is heading towards Alinga St. (LtoR) or Gungahlin Pl. (RtoL). I found this confusing for a few reasons. Firstly, we are accustomed to reading left to right. Secondly, internally the TC tracking data reports in stop sequences 1, 2 ... n stops in each route. So I like that this can be reflected in the signage. Thirdly, a right to left progress indicator almost makes it feel like the vehicle is travelling backwards? Finally, a right to left indicator was more annoying for me to code!
+6. The little arrow pointing towards the yellow stop gives extra status information about the next vehicle. If there is no arrow, that means the vehicle is AT that stop. If there is a little arrow that means the vehicle is on its way TO the stop. 
