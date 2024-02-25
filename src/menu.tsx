@@ -49,7 +49,7 @@ const theme = createTheme({
         },
         MuiTypography:{
             defaultProps:{
-                sx:{color:'white', padding:4}
+                sx:{color:'white', padding:4, maxWidth:'40em'}
             }
         },
         MuiLink:{
