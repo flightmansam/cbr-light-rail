@@ -86,7 +86,18 @@ function Menu() {
         >    
         <Typography variant="h3">TC Light Rail Info</Typography>
 
+        <img
+            src="https://upload.wikimedia.org/wikipedia/commons/0/00/Under_Construction_Line.PNG"
+        />
         <Typography variant="body1">
+            <b>Temporarily closed for maintenance.</b><br></br>I have rewritten the data side of things. Just testing a few things and should be back very shortly!
+        </Typography>
+
+        <img
+            src="https://upload.wikimedia.org/wikipedia/commons/0/00/Under_Construction_Line.PNG"
+        />
+
+        {/* <Typography variant="body1">
             <b>Instructions</b>:<br></br>
             Once you select a travel direction and station you will be redirected to the live display.
             On the display the current locations of light rail vehicles are displayed with yellow dots.
@@ -132,7 +143,7 @@ function Menu() {
             <Button onClick={() => handleButtonClick(13)}>Manning Clark</Button>
             <Button onClick={() => handleButtonClick(14)}>Gungahlin Place</Button>
         </ButtonGroup>
-        <br></br>
+        <br></br> */}
 
         <Typography variant="body1">
             <b>What is this anyway?</b> <br></br>
@@ -155,7 +166,7 @@ function Menu() {
         </Typography>
 
         <Typography variant="body1" align="right">
-        Ver. 1.3 - 24th Feb
+        Ver. 1.3.1 - 5th April
         </Typography>
         
         </Stack>

@@ -12,11 +12,15 @@ code {
     monospace;
 }
 
-html, body {margin: 0; height: 100%}
+html, body {
+  background-color: #333E48;
+  margin: 0; 
+  height: 100%}
 
 .menu {
   overflow:scroll;
-  background-color: #333E48;
+  /* background-color: #333E48; */
+  height: 100%;
 }
 
 .app {
