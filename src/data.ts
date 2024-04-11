@@ -59,7 +59,7 @@ async function get_live() {
 }
 
 async function get_arrivals(seq: number){
-    let rtn = await axios.get(`${api_url}/arrivals/${seq}}`)
+    let rtn = await axios.get(`${api_url}/arrivals/${seq}`)
         .then(function(response){
             var arrivals = []
             var data_status = DataStatus.loading
