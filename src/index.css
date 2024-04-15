@@ -25,4 +25,5 @@ html, body {
 .app {
   background-color: black;
   min-height: 0px;
+  overflow: hidden;
 }
