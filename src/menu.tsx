@@ -86,18 +86,7 @@ function Menu() {
         >    
         <Typography variant="h3">TC Light Rail Info</Typography>
 
-        <img
-            src="https://upload.wikimedia.org/wikipedia/commons/0/00/Under_Construction_Line.PNG"
-        />
         <Typography variant="body1">
-            <b>Temporarily closed for maintenance.</b><br></br>I have rewritten the data side of things. Just testing a few things and should be back very shortly!
-        </Typography>
-
-        <img
-            src="https://upload.wikimedia.org/wikipedia/commons/0/00/Under_Construction_Line.PNG"
-        />
-
-        {/* <Typography variant="body1">
             <b>Instructions</b>:<br></br>
             Once you select a travel direction and station you will be redirected to the live display.
             On the display the current locations of light rail vehicles are displayed with yellow dots.
@@ -143,7 +132,7 @@ function Menu() {
             <Button onClick={() => handleButtonClick(13)}>Manning Clark</Button>
             <Button onClick={() => handleButtonClick(14)}>Gungahlin Place</Button>
         </ButtonGroup>
-        <br></br> */}
+        <br></br>
 
         <Typography variant="body1">
             <b>What is this anyway?</b> <br></br>
@@ -153,11 +142,11 @@ function Menu() {
             It does differ a little from the real world one as I have made my own modifications because... I can! This web app is 
             still under development and may have a few bugs now and again, but it is open source!
             If you want to know how it works, add some suggestions, report bugs or contact(/hire) me, 
-            the link to the GitHub repos are below. </Typography>
+            the link to the GitHub repo is below. </Typography>
 
-        <Link href="https://github.com/flightmansam/cbr-light-rail-react"><b>Link to the web app repo</b></Link>
-        <Link href="https://github.com/flightmansam/cbr-light-rail-data"><b>Link to my data API repo</b></Link>
+        <Link href="https://github.com/flightmansam/cbr-light-rail-react"><b>Link to source code</b></Link>
         <Link href="https://github.com/flightmansam"><b>Link to me!</b></Link>
+        <Link href="https://www.buymeacoffee.com/flightmansam"><b>Buy me a coffee!</b></Link>
         
         <Typography variant="body1">
             This app is completely unofficial and is by no means affiliated with Transport Canberra so please don't get up in 
@@ -166,7 +155,7 @@ function Menu() {
         </Typography>
 
         <Typography variant="body1" align="right">
-        Ver. 1.3.1 - 5th April
+        Ver. 1.4 - 15th April
         </Typography>
         
         </Stack>
