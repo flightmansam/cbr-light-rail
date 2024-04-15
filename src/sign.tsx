@@ -104,7 +104,6 @@ function sketch(p5: P5CanvasInstance<SignSketchProps>) {
     cvs.doubleClicked(fullscreen);
 
     p5.mouseClicked = () => {
-      console.log(click_state)
       click_state = (click_state == 1) ? 0 : 1
     }
   }
@@ -154,7 +153,7 @@ function sketch(p5: P5CanvasInstance<SignSketchProps>) {
     if (data_status == DataStatus.live || data_status==DataStatus.no_scheduled ) {
 
       arr_idx = arrivals.map((a) => a.seq)
-      arrivals.sort((a, b) => b.seq - a.seq)
+      arrivals.sort((a, b) => a.time_min - b.time_min)
       let filtered_arr = arrivals.filter((arr) => is_valid_next_arr(arr, obs_stop, dest_stop)) // need to deal with idx to stop conversion??
       let next_arr = (filtered_arr.length > 0) ? filtered_arr[0] : null
       stop_idx = (next_arr) ? next_arr.seq : 0
