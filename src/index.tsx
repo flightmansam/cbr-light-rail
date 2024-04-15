@@ -18,7 +18,7 @@ const onHover = () => {
 
 function App() {
 
-
+  document.getElementById('root').style.overflow = 'hidden'
   const params = new URLSearchParams(window.location.search)
 
   const [state, setState] = useState({
@@ -64,10 +64,7 @@ root.render(
     <Routes>
       <Route path = "/" element = { <Menu />} />
       <Route path="/rail" element = {<App />}/>
-      
     </Routes>
-    
-
   </BrowserRouter>
 );
 
