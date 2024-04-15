@@ -284,12 +284,10 @@ function sketch(p5: P5CanvasInstance<SignSketchProps>) {
         pg.fill(tcc_white);
         pg.textSize(50);
 
-        pg.textAlign(p5.MIDDLE, p5.BOTTOM);
-        pg.text("|", 605, pg.height-25);
-
-
-
         if (filtered_arr.length > 0){
+          pg.textAlign(p5.MIDDLE, p5.BOTTOM);
+          pg.text("|", 605, pg.height-25);
+
           pg.textSize(45);
           if (filtered_arr.length > 1 ) {
             pg.textAlign(p5.LEFT, p5.BOTTOM);
