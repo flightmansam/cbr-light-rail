@@ -1,5 +1,5 @@
 import React, {useState } from "react";
-import { ToggleButtonGroup,  ToggleButton as MuiToggleButton, Button, ButtonGroup, Divider, Stack, ThemeProvider, createTheme, styled, Link, Typography } from "@mui/material";
+import { Container, ToggleButtonGroup,  ToggleButton as MuiToggleButton, Button, ButtonGroup, Divider, Stack, ThemeProvider, createTheme, styled, Link, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
 const ToggleButton = styled(MuiToggleButton)({
@@ -61,6 +61,9 @@ const theme = createTheme({
   });
   
 function Menu() {
+
+    document.body.style.overflow = 'visible'
+
     const [dest, setDest] = useState(1);
     let navigate = useNavigate();
 
@@ -80,11 +83,13 @@ function Menu() {
 
     return (
         <ThemeProvider theme={theme}>
+        <Container maxWidth='sm'>
         <Stack 
         spacing={1}
         className="menu"
         >    
-        <Typography variant="h3">TC Light Rail Info</Typography>
+        <Typography variant="h2">TC Light Rail Info</Typography>
+
 
         <Typography variant="body1">
             <b>Instructions</b>:<br></br>
@@ -155,10 +160,10 @@ function Menu() {
         </Typography>
 
         <Typography variant="body1" align="right">
-        Ver. 1.4 - 15th April
+        Ver. 1.4.1 - 16th April
         </Typography>
-        
         </Stack>
+        </Container>
         </ThemeProvider>
       );
 

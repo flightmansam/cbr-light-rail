@@ -18,7 +18,7 @@ const onHover = () => {
 
 function App() {
 
-  document.getElementById('root').style.overflow = 'hidden'
+  document.body.style.overflow = 'hidden'
   const params = new URLSearchParams(window.location.search)
 
   const [state, setState] = useState({
