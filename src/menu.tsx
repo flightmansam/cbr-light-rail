@@ -160,7 +160,7 @@ function Menu() {
         </Typography>
 
         <Typography variant="body1" align="right">
-        Ver. 1.4.1 - 16th April
+        Ver. 1.4.2 - 16th April
         </Typography>
         </Stack>
         </Container>
