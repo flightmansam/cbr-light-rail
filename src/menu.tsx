@@ -156,11 +156,15 @@ function Menu() {
         <Typography variant="body1">
             This app is completely unofficial and is by no means affiliated with Transport Canberra so please don't get up in 
             their grill (unless you want to show off how awesome of a job I have done!). Also there is no analytics or data tracking. 
-            Hopefully this doesn't go too viral because this app is only hosted on a server running in my living room.
+            Hopefully this doesn't go too viral because this app is only hosted on a server running in my living room.<br></br><br></br>
+            
+            <b>Nerdy Extras:</b> <br></br>
+            If you want the info board to cycle between the route progress indicator and the next arrivals page automatically add "&cycle"
+            to the end of the url of the page once redirected. e.g. <Link href="/rail?to=1&at=4&cycle" sx={{padding:0}}>cbr-transport.au/rail?to=1&at=4&cycle </Link>.This is helpful if you have set it up on a TV permanently.
         </Typography>
 
         <Typography variant="body1" align="right">
-        Ver. 1.4.2 - 16th April
+        Ver. 1.5 - 10th May
         </Typography>
         </Stack>
         </Container>

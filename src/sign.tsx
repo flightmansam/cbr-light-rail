@@ -13,6 +13,7 @@ type SignSketchProps = SketchProps & {
   obs_stop: number;
   dest_stop: number;
   arrivals : Arrival[];
+  cycle_displays: Boolean;
   data_status: DataStatus;
 }
 
@@ -42,6 +43,7 @@ function sketch(p5: P5CanvasInstance<SignSketchProps>) {
   var route_dir;
   var click_state = 0;
   var data_status = DataStatus.loading
+  var cycle_displays = false;
   var arrivals = [];
 
   const updateRouteDir = () => {
@@ -64,6 +66,15 @@ function sketch(p5: P5CanvasInstance<SignSketchProps>) {
   }
   changeStop(14);
 
+  const cycleClickState = () => {
+    let seconds = dayjs().second()
+    if ((seconds > 0 && seconds <= 10) || (seconds > 20 && seconds <= 30) || (seconds > 40 && seconds <= 50)) {
+      click_state = 1
+    } else {
+      click_state = 0
+    }
+  }
+
   const fullscreen = () => {
     if (p5.mouseX > 0 && p5.mouseX < p5.width && p5.mouseY > 0 && p5.mouseY < p5.height) {
       let fs = p5.fullscreen();
@@ -71,8 +82,6 @@ function sketch(p5: P5CanvasInstance<SignSketchProps>) {
       p5.resizeCanvas(p5.windowWidth, p5.windowHeight)
     }
   }
-
-  
 
   p5.preload = () => {
     // Creates a p5.Font object.
@@ -95,6 +104,10 @@ function sketch(p5: P5CanvasInstance<SignSketchProps>) {
 
     if (props.data_status) {
       data_status = props.data_status
+    }
+
+    if (props.cycle_displays) {
+      cycle_displays = Boolean(props.cycle_displays)
     }
   }
 
@@ -196,7 +209,8 @@ function sketch(p5: P5CanvasInstance<SignSketchProps>) {
 
     }
     
-    
+      if (cycle_displays) cycleClickState();
+
       if (click_state == 0) {
 
         pg.fill(tcc_light_grey);
@@ -275,7 +289,7 @@ function sketch(p5: P5CanvasInstance<SignSketchProps>) {
           pg.translate(-x, -y);
           
         }  
-      }  else { //click_state = 0
+      }  else { //click_state = 1
         pg.fill(tcc_black);
         pg.noStroke();
         pg.rect(0, pg.height - 100, pg.width, 90)
