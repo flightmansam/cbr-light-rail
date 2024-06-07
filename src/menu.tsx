@@ -64,11 +64,11 @@ const theme = createTheme({
   });
 
 const sxAlinga = {
-    color:'white',
+    color:'black',
     backgroundImage:'url("tcc_alinga_LGBT.png")',
     fontWeight:'bold',
     fontSize: '1.0rem',
-    "-webkit-text-stroke": '0.07rem black'
+    // "-webkit-text-stroke": '1px black'
 } 
   
 function Menu() {
@@ -175,7 +175,7 @@ function Menu() {
         </Typography>
 
         <Typography variant="body1" align="right">
-        Ver. 1.6 - 7th June
+        Ver. 1.6.1 - 7th June
         </Typography>
         </Stack>
         </Container>
