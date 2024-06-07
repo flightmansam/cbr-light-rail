@@ -27,7 +27,9 @@ const theme = createTheme({
             defaultProps:{
                 sx:{maxWidth: '500px', 
                 minWidth: '300px', 
-                boxShadow:'none'}
+                boxShadow:'none',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat',}
             }
         },
         MuiButtonGroup:{
@@ -36,6 +38,7 @@ const theme = createTheme({
                     boxShadow:'none'
                 },
                 grouped:{
+                    backgroundSize: '100% 100%',
                     maxWidth: '500px', 
                     minWidth:'300px',
                     boxShadow:'none'
@@ -59,6 +62,14 @@ const theme = createTheme({
         }
     }
   });
+
+const sxAlinga = {
+    color:'white',
+    backgroundImage:'url("tcc_alinga_LGBT.png")',
+    fontWeight:'bold',
+    fontSize: '1.0rem',
+    "-webkit-text-stroke": '0.07rem black'
+} 
   
 function Menu() {
 
@@ -122,7 +133,7 @@ function Menu() {
             aria-label="Station"
             sx={{alignItems:"center"}}
            >
-            <Button onClick={() => handleButtonClick(1)} >Alinga Street</Button>
+            <Button onClick={() => handleButtonClick(1)} sx={sxAlinga} >Alinga Street</Button>
             <Button onClick={() => handleButtonClick(2)} >Elouera Street</Button>
             <Button onClick={() => handleButtonClick(3)} >Ipima Street</Button>
             <Button onClick={() => handleButtonClick(4)} >Macarthur Avenue</Button>
@@ -164,7 +175,7 @@ function Menu() {
         </Typography>
 
         <Typography variant="body1" align="right">
-        Ver. 1.5 - 10th May
+        Ver. 1.6 - 7th June
         </Typography>
         </Stack>
         </Container>
