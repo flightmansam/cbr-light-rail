@@ -2,9 +2,9 @@
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 
 <svg
-   width="210mm"
-   height="297mm"
-   viewBox="0 0 210 297"
+   width="173.69231mm"
+   height="39.688644mm"
+   viewBox="0 0 173.69231 39.688644"
    version="1.1"
    id="svg1"
    inkscape:version="1.3.2 (091e20ef0f, 2023-11-25)"
@@ -14,6 +14,7 @@
    inkscape:export-ydpi="300"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns="http://www.w3.org/2000/svg"
    xmlns:svg="http://www.w3.org/2000/svg">
   <sodipodi:namedview
@@ -26,9 +27,9 @@
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#d1d1d1"
      inkscape:document-units="mm"
-     inkscape:zoom="1.335801"
-     inkscape:cx="306.55763"
-     inkscape:cy="95.822655"
+     inkscape:zoom="1.1163304"
+     inkscape:cx="176.02316"
+     inkscape:cy="37.623271"
      inkscape:window-width="1728"
      inkscape:window-height="1048"
      inkscape:window-x="0"
@@ -36,22 +37,22 @@
      inkscape:window-maximized="1"
      inkscape:current-layer="layer1">
     <sodipodi:guide
-       position="26.056765,255.13307"
+       position="18.459444,262.86022"
        orientation="0,95.639036"
        id="guide2"
        inkscape:locked="false" />
     <sodipodi:guide
-       position="30.346046,274.84435"
+       position="22.748725,282.5715"
        orientation="0,29.161342"
        id="guide3"
        inkscape:locked="false" />
     <sodipodi:guide
-       position="49.080493,264.98871"
+       position="41.483172,272.71586"
        orientation="37.249659,0"
        id="guide4"
        inkscape:locked="false" />
     <sodipodi:guide
-       position="53.874773,274.84435"
+       position="46.277452,282.5715"
        orientation="74.499326,0"
        id="guide5"
        inkscape:locked="false" />
@@ -70,7 +71,8 @@
   <g
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
-     id="layer1">
+     id="layer1"
+     transform="translate(-7.597321,-7.7271458)">
     <g
        id="g5"
        inkscape:export-filename="logo.png"
@@ -78,7 +80,7 @@
        inkscape:export-ydpi="300">
       <text
          xml:space="preserve"
-         style="font-size:8.81944px;font-family:Akkurat-Bold;-inkscape-font-specification:Akkurat-Bold;fill:#ffffff;stroke-width:0.429001;stroke:none"
+         style="font-size:8.81944px;font-family:Akkurat-Bold;-inkscape-font-specification:Akkurat-Bold;fill:#ffffff;stroke:none;stroke-width:0.429001"
          x="53.821857"
          y="28.523287"
          id="text1"
@@ -87,18 +89,18 @@
          inkscape:export-ydpi="96"><tspan
            sodipodi:role="line"
            id="tspan1"
-           style="font-size:8.81944px;fill:#ffffff;stroke-width:0.429;stroke:none"
+           style="font-size:8.81944px;fill:#ffffff;stroke:none;stroke-width:0.429"
            x="53.821857"
            y="28.523287">Transport Canberra</tspan></text>
       <text
          xml:space="preserve"
-         style="font-size:12.7px;font-family:Akkurat-Bold;-inkscape-font-specification:Akkurat-Bold;fill:#ffffff;stroke-width:0.429001;stroke:none"
+         style="font-size:12.7px;font-family:Akkurat-Bold;-inkscape-font-specification:Akkurat-Bold;fill:#ffffff;stroke:none;stroke-width:0.429001"
          x="53.832439"
          y="41.866932"
          id="text1-5"><tspan
            sodipodi:role="line"
            id="tspan1-3"
-           style="font-size:12.7px;fill:#ffffff;stroke-width:0.429;stroke:none"
+           style="font-size:12.7px;fill:#ffffff;stroke:none;stroke-width:0.429"
            x="53.832439"
            y="41.866932">Light Rail Information</tspan></text>
       <g
@@ -127,6 +129,32 @@
            cy="32.011292"
            r="14.8795" />
       </g>
+    </g>
+    <use
+       x="0"
+       y="0"
+       xlink:href="#g6-3"
+       id="use6"
+       transform="rotate(-13.291488,155.51883,-13.920222)" />
+    <g
+       id="g6-3"
+       transform="matrix(0.72666902,0,0,0.72666902,-52.387411,-3.2833957)">
+      <path
+         id="rect1-6"
+         style="fill:#ffcc00;stroke:#000000;stroke-width:0.828229"
+         d="m 80.206562,-18.056708 -2.069421,1.440061 2.069421,1.440062 -2.069421,1.440772 2.069421,1.440061 -2.069421,1.440772 2.069421,1.440061 -2.069421,1.4400611 2.069421,1.4393499 58.830578,0.00142 -2.06942,-1.4407721 1.972,-1.4400615 -1.972,-1.5090424 1.972,-1.371791 -1.972,-1.371792 1.972,-1.50833 -1.972,-1.372503 2.06942,-1.50833 z"
+         sodipodi:nodetypes="ccccccccccccccccccc" />
+      <text
+         xml:space="preserve"
+         style="font-size:8.81944px;font-family:Akkurat-Bold;-inkscape-font-specification:Akkurat-Bold;fill:#ffcc00;stroke:#000000;stroke-width:1.05"
+         x="108.70799"
+         y="-9.1159754"
+         id="text2-5"><tspan
+           sodipodi:role="line"
+           id="tspan2-6"
+           style="text-align:center;text-anchor:middle;fill:#000000;stroke:none;stroke-width:1.05"
+           x="108.70799"
+           y="-9.1159754">unofficial</tspan></text>
     </g>
   </g>
 </svg>
