@@ -3,25 +3,31 @@ import {
   SketchProps
 } from "@p5-wrapper/react";
 import akkurat from "./res/Akkurat-Bold.ttf"
+import akkuratRegular from "./res/Akkurat-Regular.ttf"
 import tcLogo from './res/img/tcc_white.png'
-import {stop_short_names, head_sign_names} from "./constants"
-import {Arrival, Status, stop_to_seq, DataStatus} from './helpers'
+import { stop_short_names, head_sign_names } from "./constants"
+import { Arrival, Status, stop_to_seq, DataStatus } from './helpers'
 import dayjs from "dayjs";
 
 
 type SignSketchProps = SketchProps & {
   obs_stop: number;
   dest_stop: number;
-  arrivals : Arrival[];
+  arrivals: Arrival[];
   cycle_displays: Boolean;
   data_status: DataStatus;
 }
 
+enum ImgAlign {
+  CENTER = 1,
+  TOP_LEFT = 2
+}
+
 function is_valid_next_arr(arr: Arrival, obs_stop, dest_stop) {
   let seq = stop_to_seq(obs_stop, dest_stop);
-  if (arr.seq <= seq){
+  if (arr.seq <= seq) {
     if (arr.seq == seq && arr.status == Status.stopped_at && arr.time_min < -0.16667) return false
-   return true 
+    return true
   }
 
   return false
@@ -32,6 +38,7 @@ function sketch(p5: P5CanvasInstance<SignSketchProps>) {
   let cvs;
 
   let font;
+  let regularFont;
   let img;
 
   const station_margin_l = 50;
@@ -75,6 +82,49 @@ function sketch(p5: P5CanvasInstance<SignSketchProps>) {
     }
   }
 
+  var drawImgScaledHeight = (cvs, img, x, y, height, align:ImgAlign=ImgAlign.TOP_LEFT) => {
+    let im_scale = img.width / img.height;
+    let sw = height * im_scale;
+
+    var img_x, img_y;
+
+    switch (align) {
+      case ImgAlign.TOP_LEFT:
+        img_x = x
+        img_y = y
+        break;
+      case ImgAlign.CENTER:
+        img_x = x - sw/2
+        img_y = y - height/2
+        break;
+      default:
+        img_x = 0
+        img_y = 0
+        break;
+    }
+    cvs.image(img, img_x, img_y, sw, height)
+    return {img_x, img_y, sw, height};
+  }
+
+    const drawTCLogo = (cvs, img, cx, cy, height, bold:boolean=false) => {
+    let cell_size = height/10
+    let text_offset = 2*cell_size
+    if (!bold) cvs.textFont(regularFont);
+    cvs.fill(p5.color('white'));
+    cvs.textSize(height * 0.48);
+
+    let maxTextwidth = p5.textWidth("Transport")
+    let x = cx - (maxTextwidth + text_offset + 18*cell_size)
+    let y = cy - height/2
+
+    let {img_x, img_y, sw} = drawImgScaledHeight(cvs, img, x, y, height)
+    cvs.textAlign(p5.LEFT, p5.TOP);
+    cvs.text("Transport", img_x + sw + text_offset, img_y+cell_size);
+    cvs.textAlign(p5.LEFT, p5.BASELINE);
+    cvs.text("Canberra", img_x + sw +text_offset, img_y+height-cell_size);
+    cvs.textFont(font);
+  }
+
   const fullscreen = () => {
     if (p5.mouseX > 0 && p5.mouseX < p5.width && p5.mouseY > 0 && p5.mouseY < p5.height) {
       let fs = p5.fullscreen();
@@ -86,6 +136,7 @@ function sketch(p5: P5CanvasInstance<SignSketchProps>) {
   p5.preload = () => {
     // Creates a p5.Font object.
     font = p5.loadFont(akkurat);
+    regularFont = p5.loadFont(akkuratRegular);
     img = p5.loadImage(tcLogo);
   }
 
@@ -123,6 +174,8 @@ function sketch(p5: P5CanvasInstance<SignSketchProps>) {
 
   p5.draw = () => {
     p5.clear();
+    if (cycle_displays) cycleClickState();
+
     let tcc_grey = p5.color(51, 62, 72);
     let tcc_light_grey = p5.color(115, 130, 135);
     let tcc_red = p5.color(189, 0, 33);
@@ -132,38 +185,28 @@ function sketch(p5: P5CanvasInstance<SignSketchProps>) {
     let tcc_yellow = p5.color('yellow');
     pg.textFont(font);
     pg.angleMode(p5.DEGREES);
-    
+
     pg.background(tcc_grey);
     p5.background(tcc_black);
-    
+
     pg.fill(tcc_red);
     pg.noStroke();
     pg.rect(0, 10, pg.width, 50)
-    
+
     pg.fill(tcc_white);
     pg.textSize(40);
     pg.textAlign(p5.LEFT, p5.CENTER);
     let tm_str = dayjs()
-    pg.text(`${tm_str.format("HH:mm")}`, 20, 30);
-    
-    pg.textSize(17);
-    pg.textAlign(p5.LEFT, p5.TOP);
-    pg.text("Transport", pg.width - (20 + 90), 16);
-    pg.textAlign(p5.LEFT, p5.BOTTOM);
-    pg.text("Canberra", pg.width - (20 + 90), 54);
+    pg.text(`${tm_str.format("HH:mm")}`, 20, 35);
 
-    let im_scale = img.width / img.height;
-    let sh = 35;
-    let sw = sh*im_scale;
-    pg.image(img, pg.width-(20+sw+100), 17.5, sw, sh)
+    drawTCLogo(pg, img, pg.width - (20 + 45), 35, 35, true)
 
+    let station_spacing = (pg.width - (station_margin_l + station_margin_r)) / (n_stops - 1)
 
-    let station_spacing = (pg.width - (station_margin_l+station_margin_r))/(n_stops - 1)
-    
     var stop_idx = 0
     var arr_idx = []
 
-    if (data_status == DataStatus.live || data_status==DataStatus.no_scheduled ) {
+    if (data_status == DataStatus.live) { 
 
       arr_idx = arrivals.map((a) => a.seq)
       arrivals.sort((a, b) => a.time_min - b.time_min)
@@ -176,19 +219,17 @@ function sketch(p5: P5CanvasInstance<SignSketchProps>) {
         pg.textAlign(p5.LEFT, p5.BOTTOM);
         pg.text(head_sign_names[next_arr.dest], 20, 180);
       }
-
-
       pg.fill(tcc_white)
       pg.textSize(40);
       pg.textAlign(p5.RIGHT, p5.TOP);
-      pg.text("Departs", pg.width - 20, 65);  
+      pg.text("Departs", pg.width - 20, 65);
 
-      if(next_arr){
+      if (next_arr) {
         var unit = "min"
-        if(next_arr.time_min < 1.0 && next_arr.time_min >= -1.0  ){
+        if (next_arr.time_min < 1.0 && next_arr.time_min >= -1.0) {
           unit = "Due"
         }
-        else if (next_arr.time_min < -5.0){
+        else if (next_arr.time_min < -5.0) {
           unit = "Delayed"
         } else {
           var time_str = `${Math.floor(Math.abs(next_arr.time_min))}`
@@ -207,9 +248,7 @@ function sketch(p5: P5CanvasInstance<SignSketchProps>) {
         pg.textAlign(p5.RIGHT, p5.BOTTOM);
         pg.text(unit, pg.width - 20, 180);
 
-    }
-    
-      if (cycle_displays) cycleClickState();
+      }
 
       if (click_state == 0) {
 
@@ -221,14 +260,14 @@ function sketch(p5: P5CanvasInstance<SignSketchProps>) {
         var progress_end = station_margin_l + (stop_idx - 1.5) * station_spacing
 
         if (next_arr && next_arr.status === Status.stopped_at) progress_end += (0.5) * station_spacing
-        
+
         //dark grey phantom arrow
         pg.fill(tcc_grey)
         pg.beginShape()
         pg.vertex(0, pg.height - 35)
-        pg.vertex(progress_end+4, pg.height - 35)
-        pg.vertex(progress_end+14, pg.height - 25)
-        pg.vertex(progress_end+4, pg.height - 15)
+        pg.vertex(progress_end + 4, pg.height - 35)
+        pg.vertex(progress_end + 14, pg.height - 25)
+        pg.vertex(progress_end + 4, pg.height - 15)
         pg.vertex(0, pg.height - 15)
         pg.endShape(pg.CLOSE)
 
@@ -236,33 +275,31 @@ function sketch(p5: P5CanvasInstance<SignSketchProps>) {
         pg.fill(tcc_blue)
         pg.beginShape()
         pg.vertex(0, pg.height - 35)
-        pg.vertex(progress_end-4, pg.height - 35)
-        pg.vertex(progress_end+6, pg.height - 25)
-        pg.vertex(progress_end-4, pg.height - 15)
+        pg.vertex(progress_end - 4, pg.height - 35)
+        pg.vertex(progress_end + 6, pg.height - 25)
+        pg.vertex(progress_end - 4, pg.height - 15)
         pg.vertex(0, pg.height - 15)
         pg.endShape(pg.CLOSE)
-      
-      
-      
-        for (let i = 1; i < n_stops+1; i++) {
-          
+
+        for (let i = 1; i < n_stops + 1; i++) {
+
           pg.strokeWeight(8);
-          
+
           var ring_colour = (i <= stop_idx) ? tcc_blue : tcc_white;
           ring_colour = (arr_idx.includes(i)) ? tcc_grey : ring_colour;
           ring_colour = (arr_idx.includes(i) && i === n_stops) ? tcc_yellow : ring_colour;
           var spot_colour = (i < stop_idx) ? tcc_grey : tcc_grey;
-          spot_colour = (arr_idx.includes(i)) ? tcc_yellow: spot_colour;
+          spot_colour = (arr_idx.includes(i)) ? tcc_yellow : spot_colour;
           var text_colour = (i < stop_idx) ? tcc_light_grey : tcc_white;
-          text_colour = (arr_idx.includes(i)) ? tcc_yellow: text_colour;
-          
-            
+          text_colour = (arr_idx.includes(i)) ? tcc_yellow : text_colour;
+
+
           let x = station_margin_l + (i - 1) * station_spacing;
           let y = pg.height - 25
-          
+
           pg.stroke(ring_colour)
           pg.fill(spot_colour)
-          
+
           if (i === n_stops) {
             pg.rectMode(p5.RADIUS)
             pg.fill(tcc_red)
@@ -275,68 +312,79 @@ function sketch(p5: P5CanvasInstance<SignSketchProps>) {
           } else {
             pg.circle(x, y, 30)
           }
-          
-          let stop_name = (route_dir > 0) ? stop_short_names[15-i-1]: stop_short_names[i-1]
-        
+
+          let stop_name = (route_dir > 0) ? stop_short_names[15 - i - 1] : stop_short_names[i - 1]
+
           pg.fill(text_colour);
           pg.noStroke();
           pg.translate(x, y);
           pg.rotate(-30)
           pg.textSize(17);
           pg.textAlign(p5.LEFT, p5.CENTER);
-          pg.text("        "+stop_name, 0, -5);
+          pg.text("        " + stop_name, 0, -5);
           pg.rotate(30)
           pg.translate(-x, -y);
-          
-        }  
-      }  else { //click_state = 1
+
+        }
+      } else { //click_state = 1
+
         pg.fill(tcc_black);
         pg.noStroke();
         pg.rect(0, pg.height - 100, pg.width, 90)
-
-
-        pg.fill(tcc_white);
-        pg.textSize(50);
-
-        if (filtered_arr.length > 0){
+        
+        if (filtered_arr.length > 0) {
+          pg.fill(tcc_white);
+          pg.textSize(50);
           pg.textAlign(p5.MIDDLE, p5.BOTTOM);
-          pg.text("|", 605, pg.height-25);
+          pg.text("|", 605, pg.height - 25);
 
           pg.textSize(45);
-          if (filtered_arr.length > 1 ) {
+          if (filtered_arr.length > 1) {
             pg.textAlign(p5.LEFT, p5.BOTTOM);
-            pg.text(`Next: ${head_sign_names[filtered_arr[1].dest]}`, 20, pg.height-25)
+            pg.text(`Next: ${head_sign_names[filtered_arr[1].dest]}`, 20, pg.height - 25)
 
             pg.textAlign(p5.RIGHT, p5.BOTTOM);
-            time_str =  `${Math.floor(Math.abs(filtered_arr[1].time_min))} min`
-            pg.text(time_str, 580, pg.height-25);
+            time_str = `${Math.floor(Math.abs(filtered_arr[1].time_min))} min`
+            pg.text(time_str, 580, pg.height - 25);
           }
-          if (filtered_arr.length > 2 ) {
+          if (filtered_arr.length > 2) {
             pg.textAlign(p5.LEFT, p5.BOTTOM);
-            pg.text(`Next: ${head_sign_names[filtered_arr[1].dest]}`, 620, pg.height-25)
-            
+            pg.text(`Next: ${head_sign_names[filtered_arr[1].dest]}`, 620, pg.height - 25)
+
             pg.textAlign(p5.RIGHT, p5.BOTTOM);
             time_str = `${Math.floor(Math.abs(filtered_arr[2].time_min))} min`
-            pg.text(time_str, pg.width-20, pg.height-25);
+            pg.text(time_str, pg.width - 20, pg.height - 25);
           }
 
-        } else { // no scheduled
-          pg.textAlign(p5.LEFT, p5.BOTTOM);
-          pg.text("No scheduled services", 20, pg.height-25);
-        }
-        
-      }
-    } else { // no data
+        } 
 
+      }
+    } else if (data_status == DataStatus.no_scheduled) {
+
+      if (click_state == 0) {
+        drawTCLogo(pg, img, pg.width/2, pg.height/2, 100)
+
+      } else { //click_state == 1
+
+        pg.fill(tcc_white);
+        pg.textFont(regularFont);
+        pg.textSize(50);
+        pg.textAlign(p5.CENTER, p5.TOP);
+        pg.text("Service commences at 6am", pg.width/2, pg.height/2 -30);
+        pg.textFont(font);
+
+      }
+
+    } else { // 
       var text_str = ""
       switch (data_status) {
         case DataStatus.loading:
           text_str = "Requesting data..."
-          break;  
+          break;
         case DataStatus.conn_err:
           text_str = "Data connection error."
-          break;    
-      
+          break;
+
         default:
           break;
       }
@@ -348,24 +396,24 @@ function sketch(p5: P5CanvasInstance<SignSketchProps>) {
       pg.fill(tcc_white);
       pg.textSize(50);
       pg.textAlign(p5.LEFT, p5.BOTTOM);
-      pg.text(text_str, 20, pg.height-25);
+      pg.text(text_str, 20, pg.height - 25);
     }
 
     // phone mode!
     if (p5.windowHeight >= p5.windowWidth) {
       p5.angleMode(p5.DEGREES);
-      let newH = p5.windowHeight/4.0;
-      p5.translate((p5.windowWidth + newH)/2, 0)
+      let newH = p5.windowHeight / 4.0;
+      p5.translate((p5.windowWidth + newH) / 2, 0)
       p5.rotate(90)
       p5.image(pg, 0, 0, p5.windowHeight, newH);
       p5.rotate(-90)
-      p5.translate(-(p5.windowWidth + newH)/2, 0)
+      p5.translate(-(p5.windowWidth + newH) / 2, 0)
 
     } else { //desktop mode
-      let newH = p5.windowWidth/4.0;
-      p5.image(pg, 0, (p5.windowHeight - newH)/2, p5.windowWidth, newH);
+      let newH = p5.windowWidth / 4.0;
+      p5.image(pg, 0, (p5.windowHeight - newH) / 2, p5.windowWidth, newH);
     }
-    
+
   }
 
   p5.windowResized = () => {
@@ -377,4 +425,3 @@ function sketch(p5: P5CanvasInstance<SignSketchProps>) {
 
 export default sketch
 
-  

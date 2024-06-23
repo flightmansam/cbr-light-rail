@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="210mm"
+   height="297mm"
+   viewBox="0 0 210 297"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.3.2 (091e20ef0f, 2023-11-25)"
+   sodipodi:docname="logo.svg"
+   inkscape:export-filename="logo.png"
+   inkscape:export-xdpi="300"
+   inkscape:export-ydpi="300"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#2f2f2f"
+     bordercolor="#999999"
+     borderopacity="1"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     inkscape:zoom="1.335801"
+     inkscape:cx="306.55763"
+     inkscape:cy="95.822655"
+     inkscape:window-width="1728"
+     inkscape:window-height="1048"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1">
+    <sodipodi:guide
+       position="26.056765,255.13307"
+       orientation="0,95.639036"
+       id="guide2"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       position="30.346046,274.84435"
+       orientation="0,29.161342"
+       id="guide3"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       position="49.080493,264.98871"
+       orientation="37.249659,0"
+       id="guide4"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       position="53.874773,274.84435"
+       orientation="74.499326,0"
+       id="guide5"
+       inkscape:locked="false" />
+  </sodipodi:namedview>
+  <defs
+     id="defs1">
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath198">
+      <path
+         d="M 0,0 H 841.89 V 595.276 H 0 Z"
+         transform="translate(-156.4387,-270.48601)"
+         id="path198" />
+    </clipPath>
+  </defs>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <g
+       id="g5"
+       inkscape:export-filename="logo.png"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300">
+      <text
+         xml:space="preserve"
+         style="font-size:8.81944px;font-family:Akkurat-Bold;-inkscape-font-specification:Akkurat-Bold;fill:#ffffff;stroke-width:0.429001;stroke:none"
+         x="53.821857"
+         y="28.523287"
+         id="text1"
+         inkscape:export-filename="logo.png"
+         inkscape:export-xdpi="96"
+         inkscape:export-ydpi="96"><tspan
+           sodipodi:role="line"
+           id="tspan1"
+           style="font-size:8.81944px;fill:#ffffff;stroke-width:0.429;stroke:none"
+           x="53.821857"
+           y="28.523287">Transport Canberra</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-size:12.7px;font-family:Akkurat-Bold;-inkscape-font-specification:Akkurat-Bold;fill:#ffffff;stroke-width:0.429001;stroke:none"
+         x="53.832439"
+         y="41.866932"
+         id="text1-5"><tspan
+           sodipodi:role="line"
+           id="tspan1-3"
+           style="font-size:12.7px;fill:#ffffff;stroke-width:0.429;stroke:none"
+           x="53.832439"
+           y="41.866932">Light Rail Information</tspan></text>
+      <g
+         id="g3"
+         style="fill:#ffffff;stroke:#ffffff">
+        <g
+           id="g1"
+           transform="matrix(0.26458333,0,0,0.26458333,-23.985856,-77.855437)"
+           style="fill:#ffffff;stroke:none">
+          <path
+             id="path197"
+             d="m 0,0 h 17.022 c 4.011,0 10.037,3.218 9.702,7.291 L 24.308,36.43 c -0.24,2.723 -2.187,4.864 -4.864,4.864 H -2.427 c -2.67,0 -4.641,-2.141 -4.858,-4.864 L -9.721,7.291 C -10.072,3.239 -4.014,0 0,0 M 2.432,4.853 C 1.094,4.853 0,5.941 0,7.291 c 0,1.327 1.094,2.415 2.432,2.415 1.354,0 2.447,-1.088 2.447,-2.415 0,-1.35 -1.093,-2.438 -2.447,-2.438 m 12.159,0 c -1.354,0 -2.431,1.088 -2.431,2.438 0,1.327 1.077,2.415 2.431,2.415 1.339,0 2.431,-1.088 2.431,-2.415 0,-1.35 -1.092,-2.438 -2.431,-2.438 m -8.505,34.02 h 4.862 c 0.654,0 1.212,-0.547 1.212,-1.226 0,-0.664 -0.558,-1.217 -1.212,-1.217 H 6.086 c -0.669,0 -1.207,0.553 -1.207,1.217 0,0.679 0.538,1.226 1.207,1.226 m -9.579,-6.091 c 0.057,0.669 0.648,1.232 1.326,1.232 h 21.373 c 0.658,0 1.274,-0.563 1.3,-1.232 l 1.29,-16.996 C 21.84,15.111 21.334,14.58 20.65,14.58 H -3.62 c -0.681,0 -1.185,0.531 -1.131,1.206 z"
+             style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             transform="matrix(1.3333333,0,0,-1.3333333,208.58493,433.05333)"
+             clip-path="url(#clipPath198)" />
+          <path
+             id="path199"
+             d="m 0,0 h 4.879 l -9.715,12.16 h -4.865 l 3.435,-4.3 h -23.882 l 3.424,4.3 h -4.853 L -41.293,0 h 4.868 l 3.431,4.295 h 29.569 z"
+             style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             transform="matrix(1.3333333,0,0,-1.3333333,244.1948,452.494)" />
+        </g>
+        <circle
+           style="fill:none;stroke:#ffffff;stroke-width:1.05;stroke-dasharray:none;stroke-opacity:1"
+           id="path1"
+           cx="34.200993"
+           cy="32.011292"
+           r="14.8795" />
+      </g>
+    </g>
+  </g>
+</svg>

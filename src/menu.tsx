@@ -1,11 +1,12 @@
 import React, {useState } from "react";
 import { Container, ToggleButtonGroup,  ToggleButton as MuiToggleButton, Button, ButtonGroup, Divider, Stack, ThemeProvider, createTheme, styled, Link, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import logo from './res/img/logo.png'
 
 const ToggleButton = styled(MuiToggleButton)({
     "&.Mui-selected, &.Mui-selected:hover": {
       backgroundColor: '#BD0021'
-    },
+    },  
     "&.MuiToggleButton-standard": {
         color: "white",
       }
@@ -99,7 +100,8 @@ function Menu() {
         spacing={1}
         className="menu"
         >    
-        <Typography variant="h2">TC Light Rail Info</Typography>
+        <br></br>
+        <img src={logo} alt="transport information logo"/>
 
 
         <Typography variant="body1">
@@ -175,7 +177,7 @@ function Menu() {
         </Typography>
 
         <Typography variant="body1" align="right">
-        Ver. 1.6.1 - 7th June
+        Ver. 1.7 - 23rd June
         </Typography>
         </Stack>
         </Container>
