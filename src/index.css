@@ -34,6 +34,6 @@ html, body {
   overflow: hidden;
 }
 
-.logo {
+#logo {
   padding: 0px 24px
 }
