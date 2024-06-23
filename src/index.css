@@ -33,3 +33,7 @@ html, body {
   min-height: 0px;
   overflow: hidden;
 }
+
+.logo {
+  padding: 0px 24px
+}

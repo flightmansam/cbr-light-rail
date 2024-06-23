@@ -101,7 +101,7 @@ function Menu() {
         className="menu"
         >    
         <br></br>
-        <img src={logo} alt="transport information logo"/>
+        <img id="logo" src={logo} alt="transport information logo"/>
 
 
         <Typography variant="body1">
