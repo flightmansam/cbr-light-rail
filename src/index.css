@@ -37,3 +37,8 @@ html, body {
 #logo {
   padding: 0px 24px
 }
+
+.accordion {
+  display: flex;
+  justify-content: center;
+}
