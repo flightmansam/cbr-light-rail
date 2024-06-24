@@ -28,11 +28,8 @@ const AccordionSummary = styled((props: AccordionSummaryProps) => (
     />
   ))(({ theme }) => ({
     '& .MuiAccordionSummary-expandIconWrapper.Mui-expanded': {
-      transform: 'rotate(90deg)',
-    },
-    '& .MuiAccordionSummary-content': {
-      margin: theme.spacing(1),
-    },
+      transform: 'rotate(90deg)'
+    }
   }));
 
 const theme = createTheme({
@@ -149,7 +146,7 @@ function Menu() {
                     <div className="accordion">
                     <Accordion>
                         <AccordionSummary>
-                        <u>Instructions</u>
+                        <Typography sx={{marginLeft:'5px'}}><u>Instructions</u></Typography>
                         </AccordionSummary>
                         <AccordionDetails>
                         Once you select a travel direction and station you will be redirected to the live display.
