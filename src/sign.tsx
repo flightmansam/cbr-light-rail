@@ -14,7 +14,7 @@ type SignSketchProps = SketchProps & {
   obs_stop: number;
   dest_stop: number;
   arrivals: Arrival[];
-  cycle_displays: Boolean;
+  cycle_pages: Boolean;
   data_status: DataStatus;
 }
 
@@ -49,8 +49,9 @@ function sketch(p5: P5CanvasInstance<SignSketchProps>) {
   var dest_stop;
   var route_dir;
   var click_state = 0;
+  var cycle_pages = false;
+  var page_idx = 0;
   var data_status = DataStatus.loading
-  var cycle_displays = false;
   var arrivals = [];
 
   const updateRouteDir = () => {
@@ -73,7 +74,7 @@ function sketch(p5: P5CanvasInstance<SignSketchProps>) {
   }
   changeStop(14);
 
-  const cycleClickState = () => {
+  const cyclePageIdx = () => {
     let seconds = dayjs().second()
     if ((seconds > 0 && seconds <= 10) || (seconds > 20 && seconds <= 30) || (seconds > 40 && seconds <= 50)) {
       click_state = 1
@@ -157,8 +158,8 @@ function sketch(p5: P5CanvasInstance<SignSketchProps>) {
       data_status = props.data_status
     }
 
-    if (props.cycle_displays) {
-      cycle_displays = Boolean(props.cycle_displays)
+    if (props.cycle_pages) {
+      cycle_pages = Boolean(props.cycle_pages)
     }
   }
 
@@ -174,7 +175,7 @@ function sketch(p5: P5CanvasInstance<SignSketchProps>) {
 
   p5.draw = () => {
     p5.clear();
-    if (cycle_displays) cycleClickState();
+    if (cycle_pages) cyclePageIdx();
 
     let tcc_grey = p5.color(51, 62, 72);
     let tcc_light_grey = p5.color(115, 130, 135);

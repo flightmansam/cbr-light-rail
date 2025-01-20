@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import {
     Container, ToggleButtonGroup, ToggleButton as MuiToggleButton, Button,
@@ -6,12 +6,25 @@ import {
     Accordion, AccordionActions, AccordionSummary as MuiAccordionSummary, AccordionSummaryProps, AccordionDetails
 } from "@mui/material";
 
+import Switch from "./components/checkbox";
+
 import ArrowForwardIosSharpIcon from '@mui/icons-material/ArrowForwardIosSharp';
 
 import { useNavigate } from "react-router-dom";
 
 import logo from './res/img/logo.png'
 
+const saveParams = (params) => {
+    const params_str = JSON.stringify(params)
+    window.localStorage.setItem("params", params_str)
+  } 
+  
+const getParams = () => {
+    const param_str = window.localStorage.getItem("params")
+    if (param_str) return null
+    else return JSON.parse(param_str)
+}
+  
 const ToggleButton = styled(MuiToggleButton)({
     "&.Mui-selected, &.Mui-selected:hover": {
         backgroundColor: '#BD0021'
@@ -31,6 +44,7 @@ const AccordionSummary = styled((props: AccordionSummaryProps) => (
       transform: 'rotate(90deg)'
     }
   }));
+
 
 const theme = createTheme({
     palette: {
@@ -116,8 +130,21 @@ const sxAlinga = {
 function Menu() {
 
     document.body.style.overflow = 'visible'
+    
+    // const saved_params = getParams()
+    // console.log(saved_params)
 
     const [dest, setDest] = useState(1);
+    const [params, setParams] = useState({
+        cycle_pages: true
+      });
+
+    useEffect(() => {
+        const params = getParams()
+        console.log(params)
+        if ( params !== null ) setParams(params);
+        }, []);  
+
     let navigate = useNavigate();
 
     const handleDestChange = (
@@ -130,8 +157,25 @@ function Menu() {
     const handleButtonClick = (
         button_val: number
     ) => {
-        navigate(`/rail?to=${dest}&at=${button_val}`)
+        var navigate_str = `/rail?to=${dest}&at=${button_val}`
+        if (params.cycle_pages) navigate_str += `&cycle`
+        navigate(navigate_str)
     }
+
+    const handleCyclePagesCheckbox = (
+        event: React.ChangeEvent
+    ) => {
+        var checked = (event.target as HTMLInputElement).checked
+        if (checked === true){
+            setParams({...params, cycle_pages:true})
+        } else {
+            setParams({...params, cycle_pages:false})
+        }
+    }   
+
+    useEffect(() => {
+        saveParams(params)
+    }, [params]);
 
     return (
         <ThemeProvider theme={theme}>
@@ -215,12 +259,20 @@ function Menu() {
                     <Typography variant="body1">
                         This app is completely unofficial and is by no means affiliated with Transport Canberra so please don't get up in
                         their grill (unless you want to show off how awesome of a job I have done!). Also there is no analytics or data tracking.
-                        Hopefully this doesn't go too viral because this app is only hosted on a server running in my living room.<br></br><br></br>
-
-                        <b>Nerdy Extras:</b> <br></br>
-                        If you want the info board to cycle between the route progress indicator and the next arrivals page automatically add "&cycle"
-                        to the end of the url of the page once redirected. e.g. <Link href="/rail?to=1&at=4&cycle" sx={{ padding: 0 }}>cbr-transport.au/rail?to=1&at=4&cycle </Link>.This is helpful if you have set it up on a TV permanently.
+                        Hopefully this doesn't go too viral because this app is only hosted on a server running in my living room.<br></br>
                     </Typography>
+
+                    <div className="accordion">
+                    <Accordion>
+                        <AccordionSummary>
+                        <Typography sx={{marginLeft:'5px'}}><u>Options</u></Typography>
+                        </AccordionSummary>
+                        <AccordionDetails>
+                        If you don't want the info board to cycle between the route progress indicator and the next arrivals page automatically (every 10s), turn this switch below off. Your browser will remember this setting.<br/><br/>
+                        Cycle pages automatically: <Switch checked={params.cycle_pages} onChange={handleCyclePagesCheckbox}></Switch>
+                        </AccordionDetails>
+                    </Accordion>
+                    </div>
 
                     <Typography variant="body1" align="right">
                         Ver. 1.7.1 - 24th June
