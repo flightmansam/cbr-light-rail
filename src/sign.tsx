@@ -5,9 +5,13 @@ import {
 import akkurat from "./res/Akkurat-Bold.ttf"
 import akkuratRegular from "./res/Akkurat-Regular.ttf"
 import tcLogo from './res/img/tcc_white.png'
+import UV_index from './res/img/UV_index.png'
 import { stop_short_names, head_sign_names } from "./constants"
 import { Arrival, Status, stop_to_seq, DataStatus } from './helpers'
 import dayjs from "dayjs";
+import { drawImgScaledHeight, drawFireDangerRating, draw_UV_index, draw_temp } from "./widgets";
+import { get_fire_rating, get_weather } from "./data";
+
 
 
 type SignSketchProps = SketchProps & {
@@ -18,10 +22,6 @@ type SignSketchProps = SketchProps & {
   data_status: DataStatus;
 }
 
-enum ImgAlign {
-  CENTER = 1,
-  TOP_LEFT = 2
-}
 
 function is_valid_next_arr(arr: Arrival, obs_stop, dest_stop) {
   let seq = stop_to_seq(obs_stop, dest_stop);
@@ -40,6 +40,7 @@ function sketch(p5: P5CanvasInstance<SignSketchProps>) {
   let font;
   let regularFont;
   let img;
+  let UV_img;
 
   const station_margin_l = 50;
   const station_margin_r = 140;
@@ -48,9 +49,17 @@ function sketch(p5: P5CanvasInstance<SignSketchProps>) {
   var obs_stop;
   var dest_stop;
   var route_dir;
-  var click_state = 0;
+  var click_state = 2;
   var cycle_pages = false;
   var page_idx = 0;
+  let FR_today, FR_tomorrow
+  get_fire_rating().then((response) => {
+    FR_today = response[0]
+    FR_tomorrow = response[1]
+  })
+  let weather;
+  get_weather().then((response) => weather=response)
+   
   var data_status = DataStatus.loading
   var arrivals = [];
 
@@ -83,29 +92,7 @@ function sketch(p5: P5CanvasInstance<SignSketchProps>) {
     }
   }
 
-  var drawImgScaledHeight = (cvs, img, x, y, height, align:ImgAlign=ImgAlign.TOP_LEFT) => {
-    let im_scale = img.width / img.height;
-    let sw = height * im_scale;
-
-    var img_x, img_y;
-
-    switch (align) {
-      case ImgAlign.TOP_LEFT:
-        img_x = x
-        img_y = y
-        break;
-      case ImgAlign.CENTER:
-        img_x = x - sw/2
-        img_y = y - height/2
-        break;
-      default:
-        img_x = 0
-        img_y = 0
-        break;
-    }
-    cvs.image(img, img_x, img_y, sw, height)
-    return {img_x, img_y, sw, height};
-  }
+  
 
     const drawTCLogo = (cvs, img, cx, cy, height, bold:boolean=false) => {
     let cell_size = height/10
@@ -139,6 +126,7 @@ function sketch(p5: P5CanvasInstance<SignSketchProps>) {
     font = p5.loadFont(akkurat);
     regularFont = p5.loadFont(akkuratRegular);
     img = p5.loadImage(tcLogo);
+    UV_img = p5.loadImage(UV_index);
   }
 
   p5.updateWithProps = (props: SignSketchProps) => {
@@ -169,7 +157,20 @@ function sketch(p5: P5CanvasInstance<SignSketchProps>) {
     cvs.doubleClicked(fullscreen);
 
     p5.mouseClicked = () => {
-      click_state = (click_state == 1) ? 0 : 1
+      switch (click_state) {
+        case 0:
+          click_state = 1
+          break;
+        case 1:
+          click_state = 2
+          break;
+        case 2:
+          click_state = 0
+          break;      
+        default:
+          click_state = click_state
+          break;
+      }
     }
   }
 
@@ -202,6 +203,8 @@ function sketch(p5: P5CanvasInstance<SignSketchProps>) {
 
     drawTCLogo(pg, img, pg.width - (20 + 45), 35, 35, true)
 
+
+
     let station_spacing = (pg.width - (station_margin_l + station_margin_r)) / (n_stops - 1)
 
     var stop_idx = 0
@@ -213,45 +216,50 @@ function sketch(p5: P5CanvasInstance<SignSketchProps>) {
       arrivals.sort((a, b) => a.time_min - b.time_min)
       let filtered_arr = arrivals.filter((arr) => is_valid_next_arr(arr, obs_stop, dest_stop)) // need to deal with idx to stop conversion??
       let next_arr = (filtered_arr.length > 0) ? filtered_arr[0] : null
+      var time_str
       stop_idx = (next_arr) ? next_arr.seq : 0
 
-      if (next_arr && next_arr.dest) {
-        pg.textSize(80);
-        pg.textAlign(p5.LEFT, p5.BOTTOM);
-        pg.text(head_sign_names[next_arr.dest], 20, 180);
-      }
-      pg.fill(tcc_white)
-      pg.textSize(40);
-      pg.textAlign(p5.RIGHT, p5.TOP);
-      pg.text("Departs", pg.width - 20, 65);
-
-      if (next_arr) {
-        var unit = "min"
-        if (next_arr.time_min < 1.0 && next_arr.time_min >= -1.0) {
-          unit = "Due"
-        }
-        else if (next_arr.time_min < -5.0) {
-          unit = "Delayed"
-        } else {
-          var time_str = `${Math.floor(Math.abs(next_arr.time_min))}`
-          var tm_offset = 0;
-          if (next_arr.time_min < 0) {
-            unit += " late"
-            tm_offset = 80
-          }
+      const drawNextArr = () => {
+        if (next_arr && next_arr.dest) {
           pg.textSize(80);
-          pg.textAlign(p5.RIGHT, p5.BOTTOM);
-          pg.text(time_str, pg.width - 200 - tm_offset, 183);
-
+          pg.textAlign(p5.LEFT, p5.BOTTOM);
+          pg.text(head_sign_names[next_arr.dest], 20, 180);
         }
-
-        pg.textSize(65);
-        pg.textAlign(p5.RIGHT, p5.BOTTOM);
-        pg.text(unit, pg.width - 20, 180);
-
+        pg.fill(tcc_white)
+        pg.textSize(40);
+        pg.textAlign(p5.RIGHT, p5.TOP);
+        pg.text("Departs", pg.width - 20, 65);
+  
+        if (next_arr) {
+          var unit = "min"
+          if (next_arr.time_min < 1.0 && next_arr.time_min >= -1.0) {
+            unit = "Due"
+          }
+          else if (next_arr.time_min < -5.0) {
+            unit = "Delayed"
+          } else {
+            var time_str = `${Math.floor(Math.abs(next_arr.time_min))}`
+            var tm_offset = 0;
+            if (next_arr.time_min < 0) {
+              unit += " late"
+              tm_offset = 80
+            }
+            pg.textSize(80);
+            pg.textAlign(p5.RIGHT, p5.BOTTOM);
+            pg.text(time_str, pg.width - 200 - tm_offset, 183);
+  
+          }
+  
+          pg.textSize(65);
+          pg.textAlign(p5.RIGHT, p5.BOTTOM);
+          pg.text(unit, pg.width - 20, 180);
+  
+        }
       }
 
       if (click_state == 0) {
+
+        drawNextArr()
 
         pg.fill(tcc_light_grey);
         pg.noStroke();
@@ -327,7 +335,9 @@ function sketch(p5: P5CanvasInstance<SignSketchProps>) {
           pg.translate(-x, -y);
 
         }
-      } else { //click_state = 1
+      } else if (click_state == 1) {
+
+        drawNextArr()
 
         pg.fill(tcc_black);
         pg.noStroke();
@@ -359,6 +369,24 @@ function sketch(p5: P5CanvasInstance<SignSketchProps>) {
 
         } 
 
+      } else { // click_state == 2
+        pg.textAlign(p5.CENTER, p5.BOTTOM);
+        pg.textSize(20);
+        pg.text("Fire Rating", pg.width-350+125, pg.height - 25)
+        pg.text("UV Index", 620, pg.height - 25)
+        pg.text("Temperature", 50+175, pg.height - 25)
+        drawFireDangerRating(pg, pg.width-350, 120, 250, 125, FR_today, FR_tomorrow)
+        
+        let instant = weather.properties.timeseries[0].data.instant.details
+        let uv = instant.ultraviolet_index_clear_sky
+        draw_UV_index(pg, UV_img, 600, 120, 40, 125, uv)
+
+        let currentTemp = instant.air_temperature
+        let next = weather.properties.timeseries[0].data.next_6_hours.details
+        let maxTemp = next.air_temperature_max
+        let minTemp = next.air_temperature_min
+        draw_temp(pg, 50, 120, 350, 125, currentTemp, minTemp, maxTemp)
+        
       }
     } else if (data_status == DataStatus.no_scheduled) {
 
