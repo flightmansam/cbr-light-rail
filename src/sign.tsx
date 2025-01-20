@@ -49,7 +49,7 @@ function sketch(p5: P5CanvasInstance<SignSketchProps>) {
   var obs_stop;
   var dest_stop;
   var route_dir;
-  var click_state = 2;
+  var click_state = 0;
   var cycle_pages = false;
   var page_idx = 0;
   let FR_today, FR_tomorrow
