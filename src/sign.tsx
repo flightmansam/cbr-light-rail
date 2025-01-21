@@ -11,6 +11,7 @@ import { Arrival, Status, stop_to_seq, DataStatus } from './helpers'
 import dayjs from "dayjs";
 import { drawImgScaledHeight, drawFireDangerRating, draw_UV_index, draw_temp } from "./widgets";
 import { get_fire_rating, get_weather } from "./data";
+import {COLORS} from "./colors"
 
 
 
@@ -85,10 +86,13 @@ function sketch(p5: P5CanvasInstance<SignSketchProps>) {
 
   const cyclePageIdx = () => {
     let seconds = dayjs().second()
-    if ((seconds > 0 && seconds <= 10) || (seconds > 20 && seconds <= 30) || (seconds > 40 && seconds <= 50)) {
-      click_state = 1
-    } else {
+    if ((seconds > 0 && seconds <= 10) || (seconds > 40 && seconds <= 50)) {
       click_state = 0
+    } else if (seconds > 20 && seconds <= 30){
+      click_state = 2
+    }
+    else {
+      click_state = 1
     }
   }
 
@@ -178,13 +182,14 @@ function sketch(p5: P5CanvasInstance<SignSketchProps>) {
     p5.clear();
     if (cycle_pages) cyclePageIdx();
 
-    let tcc_grey = p5.color(51, 62, 72);
-    let tcc_light_grey = p5.color(115, 130, 135);
-    let tcc_red = p5.color(189, 0, 33);
-    let tcc_blue = p5.color(69, 137, 204);
-    let tcc_black = p5.color('black');
-    let tcc_white = p5.color('white');
-    let tcc_yellow = p5.color('yellow');
+    let tcc_grey = p5.color(COLORS.tcc_grey);
+    let tcc_light_grey = p5.color(COLORS.tcc_light_grey);
+    let tcc_red = p5.color(COLORS.tcc_red);
+    let tcc_blue = p5.color(COLORS.tcc_blue);
+    let tcc_black = p5.color(COLORS.tcc_black);
+    let tcc_white = p5.color(COLORS.tcc_white);
+    let tcc_yellow = p5.color(COLORS.tcc_yellow);
+    
     pg.textFont(font);
     pg.angleMode(p5.DEGREES);
 
@@ -373,19 +378,19 @@ function sketch(p5: P5CanvasInstance<SignSketchProps>) {
         pg.textAlign(p5.CENTER, p5.BOTTOM);
         pg.textSize(20);
         pg.text("Fire Rating", pg.width-350+125, pg.height - 25)
-        pg.text("UV Index", 620, pg.height - 25)
-        pg.text("Temperature", 50+175, pg.height - 25)
+        pg.text("UV Index", 690, pg.height - 25)
         drawFireDangerRating(pg, pg.width-350, 120, 250, 125, FR_today, FR_tomorrow)
         
         let instant = weather.properties.timeseries[0].data.instant.details
         let uv = instant.ultraviolet_index_clear_sky
-        draw_UV_index(pg, UV_img, 600, 120, 40, 125, uv)
+        draw_UV_index(pg, UV_img, 670, 120, 40, 125, uv)
 
         let currentTemp = instant.air_temperature
         let next = weather.properties.timeseries[0].data.next_6_hours.details
         let maxTemp = next.air_temperature_max
         let minTemp = next.air_temperature_min
-        draw_temp(pg, 50, 120, 350, 125, currentTemp, minTemp, maxTemp)
+        let temps = weather.properties.timeseries.map((ts) => (ts.data.instant.details.air_temperature)).slice(0, 24)
+        draw_temp(pg, 50, 60, 450, 250, currentTemp, minTemp, maxTemp, temps)
         
       }
     } else if (data_status == DataStatus.no_scheduled) {

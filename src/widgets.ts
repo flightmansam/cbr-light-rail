@@ -1,5 +1,6 @@
 import {rotateText} from "./texthelpers"
 import { FireRating } from "./data";
+import {COLORS} from "./colors"
 
 
 export enum ImgAlign {
@@ -144,10 +145,20 @@ export const drawFireDangerRating = (cvs, x, y, width, height, ratingToday, rati
 
 export const draw_UV_index = (cvs, img, x, y, width, height, UV_index) =>
 {
+    
+    let tcc_grey = cvs.color(COLORS.tcc_grey);
+    let tcc_light_grey = cvs.color(COLORS.tcc_light_grey);
+    let tcc_red = cvs.color(COLORS.tcc_red);
+    let tcc_blue = cvs.color(COLORS.tcc_blue);
+    let tcc_black = cvs.color(COLORS.tcc_black);
+    let tcc_white = cvs.color(COLORS.tcc_white);
+    let tcc_yellow = cvs.color(COLORS.tcc_yellow);
+    
     cvs.image(img, x, y, width, height)
     cvs.noFill()
-    cvs.rect(x, y, width, height)
-
+    cvs.stroke(tcc_light_grey)
+    cvs.strokeWeight(8)
+    cvs.rect(x, y, width, height, 2)
 
     let arrowLength = width*0.6
     let arrowWidth = 8
@@ -156,6 +167,7 @@ export const draw_UV_index = (cvs, img, x, y, width, height, UV_index) =>
     sanatisedUV = (UV_index < 0) ? 0: sanatisedUV
     let UV_needle_height = height*(1-(sanatisedUV/13))
     
+    cvs.noStroke() 
     cvs.fill(cvs.color('white'))
     cvs.push()
     cvs.translate(x+width, y+UV_needle_height)
@@ -175,25 +187,111 @@ export const draw_UV_index = (cvs, img, x, y, width, height, UV_index) =>
 
     cvs.pop()
 }
+
+const draw_temp_graph = (cvs, x, y, width, height, currentTemp, temps) => {
+
+    let tcc_grey = cvs.color(COLORS.tcc_grey);
+    let tcc_light_grey = cvs.color(COLORS.tcc_light_grey);
+    let tcc_red = cvs.color(COLORS.tcc_red);
+    let tcc_blue = cvs.color(COLORS.tcc_blue);
+    let tcc_black = cvs.color(COLORS.tcc_black);
+    let tcc_white = cvs.color(COLORS.tcc_white);
+    let tcc_yellow = cvs.color(COLORS.tcc_yellow);
+
+    // cvs.fill(tcc_light_grey)
+    // cvs.noStroke()
+    // cvs.rect(x, y, width, height)
+    let strokeSize = 20;
+    let minTemp = Math.min(...temps)
+    let maxTemp = Math.max(...temps)
+
+    let timeStepSize = (width-strokeSize)/(temps.length-1)
+    var tempX = x+(strokeSize/2)
+    let tempY = y+height-(strokeSize/2)
+    let tempStepSize = (height-strokeSize)/(maxTemp-minTemp)
+
+    let minTempCircle;
+    let maxTempCircle;
+
+    cvs.noFill()
+    cvs.stroke(tcc_blue)
+    cvs.strokeWeight(strokeSize);
+    cvs.beginShape()
+    var index = 0
+    temps.forEach(temp => {
+        cvs.vertex(tempX, tempY-((temp-minTemp)*tempStepSize))
+        if(temp == minTemp) {
+            minTempCircle = [tempX, tempY-((temp-minTemp)*tempStepSize), index]
+        }
+
+        if(temp == maxTemp) {
+            maxTempCircle = [tempX, tempY-((temp-minTemp)*tempStepSize), index]
+        }
+
+        tempX += timeStepSize
+        index++
+    });
+    cvs.endShape()
+
+    const drawTempCircle = (circX, circY, temp, index) => {
+        cvs.textSize(25);
+        cvs.stroke(tcc_grey)
+        cvs.fill(tcc_light_grey)
+        cvs.strokeWeight(8);
+        cvs.circle(circX, circY, 30)
+
+        cvs.fill(tcc_white);
+        cvs.noStroke();
+        cvs.translate(circX, circY);
+        cvs.textAlign(cvs.LEFT, cvs.CENTER);
+        cvs.text("      +"+index+"h: "+Math.round(temp)+"°C", 0, -5);
+        cvs.translate(-circX, -circY);
+    }
+
+
+    if (minTempCircle){
+        drawTempCircle(minTempCircle[0], minTempCircle[1], minTemp, minTempCircle[2])
+    }
+
+    if (maxTempCircle){
+        drawTempCircle(maxTempCircle[0], maxTempCircle[1], maxTemp, maxTempCircle[2])
+    }
+
+    cvs.fill(tcc_yellow)
+    cvs.stroke(tcc_grey)
+    cvs.rectMode(cvs.RADIUS)
+    cvs.rect(x+(strokeSize/2), tempY-((currentTemp-minTemp)*tempStepSize), 15)
+    cvs.rectMode(cvs.CORNER)
+    // cvs.circle(, 30)
+
+}
   
-export const draw_temp = (cvs, x, y, width, height, currentTemp, forecastHigh, forecastLow ) => {
-    
-    // cvs.noFill()
+export const draw_temp = (cvs, x, y, width, height, currentTemp, forecastHigh, forecastLow, temps=[] ) => {
+
+    let tcc_light_grey = cvs.color(COLORS.tcc_light_grey);
+    let tcc_white = cvs.color(COLORS.tcc_white);
+
+    // cvs.fill(tcc_light_grey)
+    // cvs.noStroke()
     // cvs.rect(x, y, width, height)
 
-    cvs.fill(cvs.color('white'))
+    cvs.fill(tcc_white)
     cvs.noStroke()
 
-    cvs.textAlign(cvs.LEFT, cvs.TOP);
-    cvs.textSize(height);
-    cvs.text(Math.round(currentTemp)+"°C", x, y+0.1*height)
+    cvs.textAlign(cvs.LEFT, cvs.MIDDLE);
+    cvs.textSize(50);
+    cvs.text(Math.round(currentTemp)+"°C", x, y+0.5*height)
+    cvs.textSize(22);
+    cvs.text("Temp. now", x, y+0.5*height+25)
+    
+    cvs.textAlign(cvs.CENTER, cvs.TOP);
+    cvs.text("FORECAST", x+width*0.65, y+10)
 
-    cvs.textAlign(cvs.RIGHT, cvs.TOP);
-    cvs.textSize(height/5);
-    cvs.text(Math.round(forecastLow)+"°C", x+width, y)
+    let tempBoxMargin = width*0.07
+    let tempBoxX = x+tempBoxMargin+100
+    let tempBoxY = y+tempBoxMargin
+    let tempBoxWidth = width-2*tempBoxMargin-70
+    let tempBoxHeight = height-2*tempBoxMargin
 
-    cvs.textAlign(cvs.RIGHT, cvs.BOTTOM);
-    cvs.textSize(height/5);
-    cvs.text(Math.round(forecastHigh)+"°C", x+width, y+height)
-
+    draw_temp_graph(cvs, tempBoxX, tempBoxY, tempBoxWidth, tempBoxHeight, currentTemp, temps)
 }
