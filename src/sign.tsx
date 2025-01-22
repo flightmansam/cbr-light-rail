@@ -50,7 +50,7 @@ function sketch(p5: P5CanvasInstance<SignSketchProps>) {
   var obs_stop;
   var dest_stop;
   var route_dir;
-  var click_state = 0;
+  var click_state = 2;
   var cycle_pages = false;
   var page_idx = 0;
   let FR_today, FR_tomorrow
@@ -375,22 +375,31 @@ function sketch(p5: P5CanvasInstance<SignSketchProps>) {
         } 
 
       } else { // click_state == 2
+        pg.fill(tcc_white)
+        pg.noStroke()
+        pg.rect(pg.width*0.62-2.5, 95, 5, 170)
+
         pg.textAlign(p5.CENTER, p5.BOTTOM);
         pg.textSize(20);
-        pg.text("Fire Rating", pg.width-350+125, pg.height - 25)
-        pg.text("UV Index", 690, pg.height - 25)
-        drawFireDangerRating(pg, pg.width-350, 120, 250, 125, FR_today, FR_tomorrow)
+        pg.text("Fire Rating", pg.width-280, pg.height - 20)
+        
+        drawFireDangerRating(pg, pg.width-410, 120, 250, 125, FR_today, FR_tomorrow)
         
         let instant = weather.properties.timeseries[0].data.instant.details
         let uv = instant.ultraviolet_index_clear_sky
-        draw_UV_index(pg, UV_img, 670, 120, 40, 125, uv)
+        draw_UV_index(pg, UV_img, pg.width-100, 120, 40, 125, uv)
+        pg.fill(tcc_white)
+        pg.noStroke()
+        pg.textAlign(p5.CENTER, p5.BOTTOM);
+        pg.textSize(20);
+        pg.text("UV Index", pg.width-85, pg.height - 20)
 
         let currentTemp = instant.air_temperature
         let next = weather.properties.timeseries[0].data.next_6_hours.details
         let maxTemp = next.air_temperature_max
         let minTemp = next.air_temperature_min
         let temps = weather.properties.timeseries.map((ts) => (ts.data.instant.details.air_temperature)).slice(0, 24)
-        draw_temp(pg, 50, 60, 450, 250, currentTemp, minTemp, maxTemp, temps)
+        draw_temp(pg, 50, 60, 660, 240, currentTemp, minTemp, maxTemp, temps)
         
       }
     } else if (data_status == DataStatus.no_scheduled) {
