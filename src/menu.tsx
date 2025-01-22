@@ -13,17 +13,6 @@ import ArrowForwardIosSharpIcon from '@mui/icons-material/ArrowForwardIosSharp';
 import { useNavigate } from "react-router-dom";
 
 import logo from './res/img/logo.png'
-
-const saveParams = (params) => {
-    const params_str = JSON.stringify(params)
-    window.localStorage.setItem("params", params_str)
-  } 
-  
-const getParams = () => {
-    const param_str = window.localStorage.getItem("params")
-    if (param_str) return null
-    else return JSON.parse(param_str)
-}
   
 const ToggleButton = styled(MuiToggleButton)({
     "&.Mui-selected, &.Mui-selected:hover": {
@@ -135,15 +124,16 @@ function Menu() {
     // console.log(saved_params)
 
     const [dest, setDest] = useState(1);
-    const [params, setParams] = useState({
-        cycle_pages: true
-      });
+
+    const [cyclePages, setCyclePages] = useState(() => {
+        const c = localStorage.getItem("cyclePages")
+        if (c) return JSON.parse(c) 
+        else return true
+    })
 
     useEffect(() => {
-        const params = getParams()
-        console.log(params)
-        if ( params !== null ) setParams(params);
-        }, []);  
+        localStorage.setItem("cyclePages", JSON.stringify(cyclePages))
+    }, [cyclePages])
 
     let navigate = useNavigate();
 
@@ -158,24 +148,18 @@ function Menu() {
         button_val: number
     ) => {
         var navigate_str = `/rail?to=${dest}&at=${button_val}`
-        if (params.cycle_pages) navigate_str += `&cycle`
+        if (cyclePages) navigate_str += `&cycle`
         navigate(navigate_str)
     }
 
     const handleCyclePagesCheckbox = (
         event: React.ChangeEvent
     ) => {
+        event.preventDefault()
         var checked = (event.target as HTMLInputElement).checked
-        if (checked === true){
-            setParams({...params, cycle_pages:true})
-        } else {
-            setParams({...params, cycle_pages:false})
-        }
+        console.log(checked)
+        setCyclePages(checked)
     }   
-
-    useEffect(() => {
-        saveParams(params)
-    }, [params]);
 
     return (
         <ThemeProvider theme={theme}>
@@ -269,7 +253,7 @@ function Menu() {
                         </AccordionSummary>
                         <AccordionDetails>
                         If you don't want the info board to cycle between the route progress indicator and the next arrivals page automatically (every 10s), turn this switch below off. Your browser will remember this setting.<br/><br/>
-                        Cycle pages automatically: <Switch checked={params.cycle_pages} onChange={handleCyclePagesCheckbox}></Switch>
+                        Cycle pages automatically: <Switch checked={cyclePages} onChange={handleCyclePagesCheckbox}></Switch>
                         </AccordionDetails>
                     </Accordion>
                     </div>

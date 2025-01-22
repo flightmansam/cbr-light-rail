@@ -198,7 +198,7 @@ export const draw_UV_index = (cvs, img, x, y, width, height, UV_index) =>
 
     cvs.noStroke()
     cvs.fill(tcc_white)
-    cvs.textSize(20);
+    cvs.textSize(25);
     cvs.textAlign(cvs.LEFT, cvs.CENTER);
     cvs.text(UV_index.toPrecision(2), 20, 0)
 
