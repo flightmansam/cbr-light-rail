@@ -154,8 +154,6 @@ export const draw_UV_index = (cvs, img, x, y, width, height, UV_index) =>
     let tcc_white = cvs.color(COLORS.tcc_white);
     let tcc_yellow = cvs.color(COLORS.tcc_yellow);
 
-    UV_index = 6
-
 
     cvs.drawingContext.save()
     cvs.beginClip()
