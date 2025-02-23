@@ -170,7 +170,9 @@ function Menu() {
                 >
                     <br></br>
                     <img id="logo" src={logo} alt="transport information logo" />
-
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/0/00/Under_Construction_Line.PNG"/>
+                    <Typography variant="body1">I am so so sorry but something weird has happened with the Transport Canberra data. I am on the case but until then wing it I guess?</Typography>
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/0/00/Under_Construction_Line.PNG"/>
                     <div className="accordion">
                     <Accordion>
                         <AccordionSummary>
