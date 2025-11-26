@@ -20,6 +20,7 @@ type SignSketchProps = SketchProps & {
   dest_stop: number;
   arrivals: Arrival[];
   cycle_pages: Boolean;
+  show_weather: Boolean;
   data_status: DataStatus;
 }
 
@@ -52,6 +53,7 @@ function sketch(p5: P5CanvasInstance<SignSketchProps>) {
   var route_dir;
   var click_state = 1;
   var cycle_pages = false;
+  var show_weather = false;
   var page_idx = 0;
   let FR_today, FR_tomorrow
   get_fire_rating().then((response) => {
@@ -89,7 +91,7 @@ function sketch(p5: P5CanvasInstance<SignSketchProps>) {
     if ((seconds > 0 && seconds <= 10) || (seconds > 40 && seconds <= 50)) {
       click_state = 0
     } else if (seconds > 20 && seconds <= 30){
-      click_state = 2
+      click_state = (show_weather) ? 2 : 1
     }
     else {
       click_state = 1
@@ -153,6 +155,10 @@ function sketch(p5: P5CanvasInstance<SignSketchProps>) {
     if (props.cycle_pages) {
       cycle_pages = Boolean(props.cycle_pages)
     }
+
+    if (props.show_weather) {
+      show_weather = Boolean(props.show_weather)
+    }
   }
 
   p5.setup = () => {
@@ -166,7 +172,7 @@ function sketch(p5: P5CanvasInstance<SignSketchProps>) {
           click_state = 1
           break;
         case 1:
-          click_state = 2
+          click_state = (show_weather) ? 2 : 0
           break;
         case 2:
           click_state = 0

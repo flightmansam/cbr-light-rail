@@ -13,6 +13,7 @@ import ArrowForwardIosSharpIcon from '@mui/icons-material/ArrowForwardIosSharp';
 import { useNavigate } from "react-router-dom";
 
 import logo from './res/img/logo.png'
+import nobugs from './res/img/light_rail_less_bugs.png'
   
 const ToggleButton = styled(MuiToggleButton)({
     "&.Mui-selected, &.Mui-selected:hover": {
@@ -108,13 +109,6 @@ const theme = createTheme({
     }
 });
 
-const sxAlinga = {
-    color: 'black',
-    backgroundImage: 'url("tcc_alinga_LGBT.png")',
-    fontWeight: 'bold',
-    fontSize: '1.0rem',
-    // "-webkit-text-stroke": '1px black'
-}
 
 function Menu() {
 
@@ -131,9 +125,19 @@ function Menu() {
         else return true
     })
 
+    const [showWeather, setShowWeather] = useState(() => {
+        const c = localStorage.getItem("showWeather")
+        if (c) return JSON.parse(c) 
+        else return true
+    })
+
     useEffect(() => {
         localStorage.setItem("cyclePages", JSON.stringify(cyclePages))
     }, [cyclePages])
+
+    useEffect(() => {
+        localStorage.setItem("showWeather", JSON.stringify(showWeather))
+    }, [showWeather])
 
     let navigate = useNavigate();
 
@@ -149,6 +153,7 @@ function Menu() {
     ) => {
         var navigate_str = `/rail?to=${dest}&at=${button_val}`
         if (cyclePages) navigate_str += `&cycle`
+        if (showWeather) navigate_str += `&showWeather`
         navigate(navigate_str)
     }
 
@@ -161,6 +166,15 @@ function Menu() {
         setCyclePages(checked)
     }   
 
+    const handleShowWeatherCheckbox = (
+        event: React.ChangeEvent
+    ) => {
+        event.preventDefault()
+        var checked = (event.target as HTMLInputElement).checked
+        console.log(checked)
+        setShowWeather(checked)
+    } 
+
     return (
         <ThemeProvider theme={theme}>
             <Container maxWidth='sm'>
@@ -169,10 +183,8 @@ function Menu() {
                     className="menu"
                 >
                     <br></br>
-                    <img id="logo" src={logo} alt="transport information logo" />
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/0/00/Under_Construction_Line.PNG"/>
-                    <Typography variant="body1">I am so so sorry but something weird has happened with the Transport Canberra data. I am on the case but until then wing it I guess?</Typography>
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/0/00/Under_Construction_Line.PNG"/>
+                    <img id="logo" src={logo} alt="Currently testing new logic to fix weirdness experienced where sometimes next arrivals was &gt;60mins. Hope none of you were late to the stop!" />
+                    <img src={nobugs}/>
                     <div className="accordion">
                     <Accordion>
                         <AccordionSummary>
@@ -211,7 +223,7 @@ function Menu() {
                         aria-label="Station"
                         sx={{ alignItems: "center" }}
                     >
-                        <Button onClick={() => handleButtonClick(1)} sx={sxAlinga} >Alinga Street</Button>
+                        <Button onClick={() => handleButtonClick(1)} >Alinga Street</Button>
                         <Button onClick={() => handleButtonClick(2)} >Elouera Street</Button>
                         <Button onClick={() => handleButtonClick(3)} >Ipima Street</Button>
                         <Button onClick={() => handleButtonClick(4)} >Macarthur Avenue</Button>
@@ -248,20 +260,24 @@ function Menu() {
                         Hopefully this doesn't go too viral because this app is only hosted on a server running in my living room.<br></br>
                     </Typography>
 
-                    <div className="accordion">
+                    <div className="accordion" style={{maxWidth:'max-content'}}>
                     <Accordion>
                         <AccordionSummary>
                         <Typography sx={{marginLeft:'5px'}}><u>Options</u></Typography>
                         </AccordionSummary>
-                        <AccordionDetails>
-                        If you don't want the info board to cycle between the route progress indicator and the next arrivals page automatically (every 10s), turn this switch below off. Your browser will remember this setting.<br/><br/>
+                        <AccordionDetails>Your browser will remember these settings.</AccordionDetails>
+                        <AccordionDetails title="Cycle between the route progress indicator and the next arrivals page automatically every 10s">
                         Cycle pages automatically: <Switch checked={cyclePages} onChange={handleCyclePagesCheckbox}></Switch>
+                        </AccordionDetails>
+                        <AccordionDetails title='Include an additional page with the weather, fire danger rating and UV index'>
+                
+                        Include Weather Page: <Switch checked={showWeather} onChange={handleShowWeatherCheckbox}></Switch>
                         </AccordionDetails>
                     </Accordion>
                     </div>
 
                     <Typography variant="body1" align="right">
-                        Ver. 1.7.1 - 24th June
+                        Ver. 1.8 - 26th Nov
                     </Typography>
                 </Stack>
             </Container>

@@ -25,6 +25,7 @@ function App() {
     obs_stop: (params.has("at")) ? parseInt(params.get("at")) : 4,
     dest_stop: (params.has("to")) ? parseInt(params.get("to")) : 1,
     cycle_pages: (params.has("cycle")) ? true: false,
+    show_weather: (params.has("showWeather")) ? true: false,
     data_status: DataStatus.loading
   });
 
@@ -55,7 +56,7 @@ function App() {
 
   return (
   <div className="app">
-    <ReactP5Wrapper sketch={sketch} obs_stop={state.obs_stop} dest_stop={state.dest_stop} arrivals={arrivals} cycle_pages={state.cycle_pages} data_status={state.data_status} />
+    <ReactP5Wrapper sketch={sketch} obs_stop={state.obs_stop} dest_stop={state.dest_stop} arrivals={arrivals} cycle_pages={state.cycle_pages} show_weather={state.show_weather} data_status={state.data_status} />
   </div>
   );
 }
